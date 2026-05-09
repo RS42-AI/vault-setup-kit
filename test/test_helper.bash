@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
 # Project root used by all tests
-export KIT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+KIT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+export KIT_ROOT
 
 # Throwaway test vault — recreated per test
 setup_test_vault() {
