@@ -1,0 +1,22 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run shellcheck
+        run: |
+          find . -type f \( -name "*.sh" -o -name "*.bash" \) -not -path "./test/bats/*" -print0 \
+            | xargs -0 shellcheck -x
+
+  test:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install bats
+        run: brew install bats-core
+      - name: Run tests
+        run: bats test/
