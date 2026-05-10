@@ -68,7 +68,7 @@ echo "[2/4] Copying starter content..."
 # nested directories that may already partially exist in the target.
 copied_count=0
 while IFS= read -r -d '' src_file; do
-  rel="${src_file#$SRC/}"
+  rel="${src_file#"$SRC"/}"
   dest="$VAULT/$rel"
   dest_dir="$(dirname "$dest")"
   mkdir -p "$dest_dir"
