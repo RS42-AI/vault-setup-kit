@@ -62,7 +62,7 @@ else
   # TODO (v2): auto-fetch the API key by reading
   # $VAULT/.obsidian/plugins/obsidian-local-rest-api/data.json (the
   # plugin stores its generated key there). For now, paste manually.
-  read -p "  Paste the Local REST API key (or press Enter to skip): " API_KEY
+  read -r -p "  Paste the Local REST API key (or press Enter to skip): " API_KEY
 
   if [ -n "$API_KEY" ]; then
     claude mcp add obsidian-mcp-tools \
