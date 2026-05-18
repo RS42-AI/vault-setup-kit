@@ -6,6 +6,8 @@ area:
 tags: []
 attendees:
   - "[[]]"
+granola_id:
+granola_url:
 source: manual
 ---
 ## Attendees
