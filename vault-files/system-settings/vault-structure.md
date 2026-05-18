@@ -23,7 +23,7 @@ Numeric prefixes order the top-level folders in the sidebar; `Personal/` and `sy
 | `5. Resources/` | Human-curated reference material by area | `resource` |
 | `5. Resources/Personal/` | Personal reference material; holds the `Journal/` subtree (`Morning Entries/`, `Evening Entries/`) | `resource`, `journal` |
 | `6. Main Notes/` | General knowledge, not project-specific | `note`/`idea`/`goal`/`thought` |
-| `Personal/` | Self-contained `personal` area at the vault root, holds personal-life projects | — |
+| `Personal/` | Self-contained `personal` area at the vault root, holds personal-life projects | `area-dashboard` |
 | `Personal/Tasks/` | Area-level personal tasks not tied to a project | `task` |
 | `system-settings/` | Vault configuration | — |
 | `system-settings/Templates/` | Note templates — the schema source of truth | — |
@@ -54,6 +54,8 @@ Projects use a standard four-folder layout:
 One file per goal: `3. Areas/{Area}/Goals/{Goal Name}.md` (`type: goal`). Each goal is its own sub-hub — an Objective plus Key Results — rather than a single horizon-aggregate file per quarter. The kit pre-creates `3. Areas/Personal/Goals/`; create the parallel `Goals/` folder for any new area you add.
 
 ## Journal & Daily Paths
+
+Journal paths follow `5. Resources/{Area}/Journal/`. The kit ships with one area (`personal`), so the concrete paths are:
 
 | Content | Path |
 |---------|------|
