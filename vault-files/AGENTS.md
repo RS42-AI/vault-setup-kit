@@ -18,7 +18,7 @@ Full folder roles, project-folder layout, and the daily/journal paths live in [[
 
 ## Areas
 
-This table is the canonical list of life areas the vault knows about. The starter kit ships with exactly one area — `personal` — because a fresh vault doesn't yet need more. As your life grows, add new areas by creating a folder under `3. Areas/{Area}/` (with a `{Area}.md` hub + `Goals/` subfolder) and appending a row here. Examples a new user might add: `health`, `career`, `personal-finance`, `{your-business-slug}`.
+This table is the canonical list of life areas the vault knows about. The starter kit ships with exactly one area — `personal` — because a fresh vault doesn't yet need more. As your life grows, add new areas by creating a folder under `3. Areas/{Area}/` (with a `{Area}.md` hub + `Goals/` subfolder) and appending a row here. Examples a new user might add: `health`, `career`, `personal-finance`, `work`.
 
 Project *existence* and slugs are still derived from the filesystem, never listed.
 
@@ -32,7 +32,7 @@ When creating a note, walk these in order:
 
 0. Actionable work item, **work/business project** → `2. Projects/{Area}/{Project}/Tasks/` (`type: task`, set `area:` + `project:`)
 0a. Actionable work item, **personal-life project** → `Personal/{Project}/Tasks/` (set `area:` + `project:`)
-0b. Actionable work item, **area-level, no project** → `Personal/Tasks/` or `3. Areas/{Area}/Tasks/` (set `area:`)
+0b. Actionable work item, **area-level, no project** → `Personal/Tasks/` (set `area:`)
 1. Session / work log → `{Project}/Dev Log/` (Devlog Template, chain-link to previous)
 2. About an active project → `{Project}/Notes/` (set `project:`)
 3. About an area, no specific project → `6. Main Notes/` (set `area:`)
@@ -128,4 +128,4 @@ This vault is a git repo. Commit changes regularly to preserve history. Semantic
 
 ## Maintenance
 
-This file is generated and kept current by the AI from `system-settings/agents-md-spec.md` — see the onboarding task `Set up my AGENTS.md` for the walkthrough. When the vault's shape or rules change, update the spec and regenerate; don't hand-edit this file in isolation.
+This file is generated and kept current by the AI from [[agents-md-spec]] — see the onboarding task `Set up my AGENTS.md` for the walkthrough. When the vault's shape or rules change, update the spec and regenerate; don't hand-edit this file in isolation.
