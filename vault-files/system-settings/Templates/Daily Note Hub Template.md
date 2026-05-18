@@ -14,6 +14,7 @@ tags:
 
 > [[5. Resources/Personal/Journal/Morning Entries/<% tp.date.now("YYYY-MM-DD") %>|Open Morning Entry]]
 
+
 **Today's priorities:**
 - [ ] ...
 
@@ -64,13 +65,37 @@ views:
 ```
 
 ---
+## Today's Dev Sessions
 
+```base
+filters:
+  and:
+    - type == "devlog"
+    - date == "<% tp.date.now("YYYY-MM-DD") %>"
+views:
+  - type: table
+    name: Dev Sessions
+    order:
+      - file.name
+      - project
+      - session_topic
+    sort:
+      - property: file.name
+        direction: ASC
+    columnSize:
+      file.name: 400
+      note.project: 150
+      note.session_topic: 250
+```
+
+---
 ## Notes Created Today
 
 ```base
 filters:
   and:
     - date == "<% tp.date.now("YYYY-MM-DD") %>"
+    - type != "devlog"
     - type != "meeting"
     - type != "daily"
     - type != "journal"

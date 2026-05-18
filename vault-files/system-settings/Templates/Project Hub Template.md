@@ -4,8 +4,16 @@ type: project
 status: active
 area:
 project:
+goal:
 tags: []
 ---
+
+<!--
+goal: single wikilink to the area Goal this project serves, e.g. "[[2026-Q2]]"
+      Empty = latent project (visible debt on area dashboard)
+      For projects serving secondary goals, use Obsidian backlinks rather than a list field.
+-->
+
 
 ## Overview
 
@@ -15,7 +23,9 @@ tags: []
 
 ## Current Status
 
-*No status update yet.*
+<!-- Refreshed by /project-sync -->
+
+*No status update yet — run `/project-sync` to populate.*
 
 ---
 
@@ -26,7 +36,9 @@ filters:
   and:
     - type == "task"
     - project == "{{VALUE:project slug}}"
-    - status == "todo" OR status == "active"
+    - or:
+        - status == "todo"
+        - status == "active"
 views:
   - type: table
     name: Active Tasks

@@ -8,7 +8,9 @@ priority: p3
 due_date: ""
 scheduled_date: ""
 done_date: ""
-blocked_by: ""
+blocked_by: []
+blocked_reason: ""
+unlocks: []
 external_id: ""
 tags:
   - task
