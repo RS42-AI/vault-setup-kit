@@ -10,7 +10,7 @@ scheduled_date: ""
 done_date: ""
 blocked_by:
   - "[[Set up my first goal]]"
-blocked_reason: "Best done after you've used the system enough to know what to customize"
+blocked_reason: "Best done after you have one real area + project in mind — gives the AI concrete answers to interview you about"
 unlocks: []
 external_id: ""
 tags:
@@ -82,6 +82,8 @@ system identity, privacy settings, any conventions I've added. Show me
 the diff before writing.
 ```
 
+The AI will flag anything ambiguous and ask before changing it — that's expected, not an error.
+
 The REVISION procedure in the spec is explicit about what to preserve and what to update: standing rules track the spec, curated config stays yours.
 
 ## Done when
@@ -90,6 +92,7 @@ The REVISION procedure in the spec is explicit about what to preserve and what t
 - [ ] `AGENTS.md` reflects your real areas (not just the shipped `personal` placeholder)
 - [ ] External-system identity captured if you use one (GitHub / Linear / ADO / Notion mapping)
 - [ ] Privacy section filled in or omitted, per the spec's guidance
+- [ ] Reviewed the AI's report (what was filled in, what was omitted, any flagged questions)
 - [ ] `AGENTS.md` is committed to git
 
 ## See also
