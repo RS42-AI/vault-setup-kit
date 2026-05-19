@@ -43,6 +43,12 @@ if [ "$UPDATE_MODE" -eq 1 ]; then
   echo "$SCRIPT_DIR" > "$VAULT/.vault-kit-path"
 fi
 
+if [ "$UPDATE_MODE" -eq 1 ]; then
+  echo "[update] Installing /update-structure slash command"
+  mkdir -p "$VAULT/.claude/commands"
+  cp "$SCRIPT_DIR/commands/update-structure.md" "$VAULT/.claude/commands/update-structure.md"
+fi
+
 # --- 1. Create folder structure ---
 echo "[1/4] Creating folder structure..."
 
