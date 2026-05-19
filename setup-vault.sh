@@ -136,8 +136,15 @@ fi
 echo ""
 echo "=== Setup Complete ==="
 echo ""
-echo "Next steps:"
-echo "  1. Open Obsidian and point it at: $VAULT"
-echo "  2. Run setup-plugins.sh to install community plugins"
-echo "  3. Run setup-mcp.sh to register MCP servers with Claude Code"
-echo "  4. Open Personal/Vault-Setup/Vault-Setup.md and start the curriculum"
+if [ "$UPDATE_MODE" -eq 1 ]; then
+  echo "Next steps:"
+  echo "  1. Open Claude Code in: $VAULT"
+  echo "  2. Run: /update-structure"
+  echo "     (applies outstanding structure updates interactively)"
+else
+  echo "Next steps:"
+  echo "  1. Open Obsidian and point it at: $VAULT"
+  echo "  2. Run setup-plugins.sh to install community plugins"
+  echo "  3. Run setup-mcp.sh to register MCP servers with Claude Code"
+  echo "  4. Open Personal/Vault-Setup/Vault-Setup.md and start the curriculum"
+fi
