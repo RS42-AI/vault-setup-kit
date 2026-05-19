@@ -44,3 +44,10 @@ load test_helper
   [ "$(cat "$TEST_VAULT/CLAUDE.md")" = "user-customization" ]
   [ -f "$TEST_VAULT/AGENTS.md" ]
 }
+
+@test "setup-vault.sh --update next-steps mention /update-structure" {
+  setup_test_vault
+  run bash "$KIT_ROOT/setup-vault.sh" --update "$TEST_VAULT"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"/update-structure"* ]]
+}
