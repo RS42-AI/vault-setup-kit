@@ -1,5 +1,21 @@
 # AGENTS.md
 
+## Contents
+
+1. [Vault Structure](#vault-structure)
+2. [Areas](#areas)
+3. [File Routing — Decision Tree](#file-routing--decision-tree)
+4. [Frontmatter Taxonomy](#frontmatter-taxonomy)
+5. [Devlog Task Linking](#devlog-task-linking)
+6. [Cross-System Identity](#cross-system-identity-optional--fill-in-if-you-use-external-systems)
+7. [Privacy Inheritance](#privacy-inheritance-only-if-you-have-or-expect-private-projects--otherwise-omit)
+8. [Orphan-Note Rule](#orphan-note-rule)
+9. [Memory System](#memory-system--do-not-use-without-permission)
+10. [Note Quality Rules](#note-quality-rules)
+11. [Vault Search Strategy](#vault-search-strategy)
+12. [Git Workflow](#git-workflow)
+13. [Maintenance](#maintenance)
+
 Canonical instruction file for this vault — read by any agent (Claude Code, Codex, and whatever comes next). `CLAUDE.md` is a one-line pointer to this file.
 
 This vault is a personal knowledge-management system designed for human-AI collaboration: reference notes, project work, daily journaling. Frontmatter-driven routing and Obsidian Bases let humans and AI agents both navigate, search, and maintain it.
@@ -88,7 +104,7 @@ If you mirror projects across other systems (GitHub, Linear, Azure DevOps, Notio
 - **Identity resolution** (partial input → project) — exact slug match → slug contained in project name → ask the user.
 - **Do NOT create new projects** unless explicitly instructed.
 
-## Privacy Inheritance
+## Privacy Inheritance (only if you have or expect private projects — otherwise omit)
 
 Privacy is a **project-level** property. When a project hub (`type: project`) has `private: true`, every file with `project: <same-slug>` inherits it — all devlogs, knowledge notes, tasks, and the hub itself. Privatized files are excluded from any "recent activity" rollup, daily recap, or journal-priority extraction. Override on a single file with `private: false`.
 
