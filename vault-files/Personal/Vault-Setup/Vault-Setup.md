@@ -81,7 +81,7 @@ Three concrete tasks to do once you've read the curriculum. Each is a real `type
 
 - [[Add my first project]] — practice the project-creation flow with something real
 - [[Set up my first goal]] — anchor a project to an outcome, learn the goals system
-- [[Customize my CLAUDE.md]] — make the AI behave the way *you* want, not just how the kit shipped
+- [[Set up my AGENTS.md]] — run an AI-assisted session that tailors the vault's instruction file to your areas, your external systems, and your conventions
 
 ---
 

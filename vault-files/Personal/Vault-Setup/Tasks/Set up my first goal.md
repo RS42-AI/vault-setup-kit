@@ -12,7 +12,7 @@ blocked_by:
   - "[[Add my first project]]"
 blocked_reason: "Best done after you have one real project to anchor the goal to"
 unlocks:
-  - "[[Customize my CLAUDE.md]]"
+  - "[[Set up my AGENTS.md]]"
 external_id: ""
 tags:
   - task
