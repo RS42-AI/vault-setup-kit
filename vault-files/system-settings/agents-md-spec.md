@@ -72,7 +72,7 @@ A complete `AGENTS.md` has the following sections, in this order. Always-present
 8. **Note Quality Rules.** Standing rules about note hygiene — no context re-explanation, max lines per note, one canonical note per concept, corrections replace not supplement, session logs ≠ knowledge notes, etc.
 9. **Git Workflow.** Commit cadence, semantic-commit prefixes, "never mention AI generation or co-authoring in a commit message."
 
-**Additional standing-rule sections may also appear** when the user's workflow needs them: Devlog Task Linking, Orphan-Note Rule, Memory System rules, Vault Search Strategy, Maintenance pointer. Include each only when it encodes a real standing rule the user follows — they pass the same scope test as everything else.
+**Additional standing-rule sections may also appear** when the user's workflow needs them: Devlog Task Linking, Orphan-Note Rule, Memory System rules, Vault Search Strategy, Maintenance pointer. Include each only when it encodes a real standing rule the user follows — they pass the same scope test as everything else. Their placement, when included, follows the baseline's order: Devlog Task Linking after Frontmatter Taxonomy; Orphan-Note Rule and Memory System after Privacy Inheritance; Vault Search Strategy after Note Quality Rules; Maintenance pointer as the closing line.
 
 **Closing pointer.** End with a one-paragraph Maintenance note: this file is generated from `system-settings/agents-md-spec.md`; when rules or shape change, update the spec and re-run the onboarding task — don't hand-edit in isolation.
 
@@ -86,7 +86,7 @@ Procedure:
 2. **Read this spec end-to-end.** The section template (§4) and the scope discipline (§2) govern what you keep, drop, or fill in.
 3. **Interview the user (or read their vault) for the non-inferable curated config:**
    - **Areas.** What life areas do they want the vault to know about? The baseline ships with one (`personal`). Ask what they want to add now — common starters: `work`, `health`, `career`, `personal-finance`. Resist over-listing; areas can be added later by creating the folder and appending a row.
-   - **External systems.** Do they mirror projects across GitHub, Linear, Jira, ADO, or Notion? If yes, fill in the Cross-System Identity section with their tools' conventions. If no, omit the section entirely (or leave a one-line stub explaining when to add it).
+   - **External systems.** Do they mirror projects across GitHub, Linear, Jira, ADO, or Notion? If yes, fill in the Cross-System Identity section with their tools' conventions. If no, omit the section entirely (or leave a brief stub explaining when to add it — see the baseline for the shape).
    - **Private projects.** Do they have, or expect, any private projects? If yes, include the Privacy Inheritance section verbatim from the baseline. If no, omit.
    - **Custom routing.** Does any folder of theirs need a routing rule the baseline doesn't cover? Add it to the decision tree only if it's a *standing* rule, not a one-off.
 4. **Leave everything derivable out.** Do not enumerate projects. Do not list every template's frontmatter fields. Do not restate the folder tree — point at `system-settings/vault-structure.md`.
