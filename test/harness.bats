@@ -11,3 +11,10 @@ load test_helper
   setup_test_vault
   [ -d "$TEST_VAULT" ]
 }
+
+@test "setup-vault.sh --update prints update-mode header" {
+  setup_test_vault
+  run bash "$KIT_ROOT/setup-vault.sh" --update "$TEST_VAULT"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Update Mode"* ]]
+}

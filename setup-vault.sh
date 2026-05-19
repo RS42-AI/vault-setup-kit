@@ -14,6 +14,12 @@
 
 set -euo pipefail
 
+UPDATE_MODE=0
+if [ "${1:-}" = "--update" ]; then
+  UPDATE_MODE=1
+  shift
+fi
+
 VAULT="${1:-$HOME/Claude/ObsidianVault}"
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 SRC="$SCRIPT_DIR/vault-files"
@@ -24,7 +30,11 @@ if [ ! -d "$SRC" ]; then
   exit 1
 fi
 
-echo "=== Vault Setup ==="
+if [ "$UPDATE_MODE" -eq 1 ]; then
+  echo "=== Vault Setup — Update Mode ==="
+else
+  echo "=== Vault Setup ==="
+fi
 echo "Target vault: $VAULT"
 echo ""
 
