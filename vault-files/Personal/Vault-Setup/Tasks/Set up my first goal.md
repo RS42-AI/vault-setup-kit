@@ -96,6 +96,6 @@ It's also fine to leave `goal: ` empty — that's a valid state ("latent project
 
 ## See also
 
-- `CLAUDE.md` (vault root) — Goal frontmatter spec
+- `AGENTS.md` (vault root) — Goal frontmatter spec (field shapes live in `system-settings/Templates/`)
 - [[Add my first project]] — the project this goal anchors to
 - [[Vault-Setup]] — back to the orientation hub
