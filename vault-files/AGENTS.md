@@ -144,4 +144,4 @@ This vault is a git repo. Commit changes regularly to preserve history. Semantic
 
 ## Maintenance
 
-This file is generated and kept current by the AI from [[agents-md-spec]] — see the onboarding task `Set up my AGENTS.md` for the walkthrough. When the vault's shape or rules change, update the spec and regenerate; don't hand-edit this file in isolation.
+On first install, run the `Set up my AGENTS.md` onboarding task to tailor this file to your life. When the kit ships improvements, run `/update-structure` in Claude Code at the vault root — it reads the kit's `structure-updates/` and walks you through applicable changes interactively. Hand-edit the curated-config sections (Areas, Cross-System Identity, Privacy Inheritance) freely; for changes to the standing rules above, contribute back to the kit instead of diverging in isolation.
