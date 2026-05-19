@@ -28,3 +28,10 @@ load test_helper
   recorded="$(cat "$TEST_VAULT/.vault-kit-path")"
   [ "$recorded" = "$KIT_ROOT" ]
 }
+
+@test "setup-vault.sh --update copies commands/update-structure.md to <vault>/.claude/commands/" {
+  setup_test_vault
+  run bash "$KIT_ROOT/setup-vault.sh" --update "$TEST_VAULT"
+  [ "$status" -eq 0 ]
+  [ -f "$TEST_VAULT/.claude/commands/update-structure.md" ]
+}
