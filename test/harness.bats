@@ -51,3 +51,10 @@ load test_helper
   [ "$status" -eq 0 ]
   [[ "$output" == *"/update-structure"* ]]
 }
+
+@test "setup-vault.sh --update errors if vault dir does not exist" {
+  local missing="$BATS_TEST_TMPDIR/no-such-vault"
+  run bash "$KIT_ROOT/setup-vault.sh" --update "$missing"
+  [ "$status" -eq 1 ]
+  [[ "$output" == *"does not exist"* ]]
+}
