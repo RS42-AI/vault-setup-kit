@@ -39,6 +39,17 @@ The kit runs three steps in order:
 
 You can also run any step individually if you only need to refresh part of the setup. All scripts are **idempotent** — re-running won't overwrite existing files.
 
+## Updating an existing install
+
+If you already installed the kit and want to pick up changes from a newer release:
+
+```bash
+cd vault-setup-kit && git pull
+bash setup-vault.sh --update ~/Claude/ObsidianVault
+```
+
+Then open Claude Code in the vault and run `/update-structure` — it walks you through any pending structural changes interactively. See [`docs/architecture/update-channel.md`](docs/architecture/update-channel.md) for the operational mental model.
+
 ## After running
 
 1. Open Obsidian, point it at the vault path
