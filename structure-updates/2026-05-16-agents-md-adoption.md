@@ -38,32 +38,23 @@ If `CLAUDE.md` is already a short pointer (5–10 lines containing `@AGENTS.md`)
 Create this file with the canonical Personal OS instruction content. Kit v0.2 ships the canonical AGENTS.md at `vault-files/AGENTS.md` — the user has already received it via the non-clobber copy in `setup-vault.sh --update`. If for some reason it didn't arrive, copy from kit's `vault-files/AGENTS.md`.
 
 Key sections the new `AGENTS.md` must contain:
-- Vault Structure overview (with pointer to `system-settings/vault-structure.md` for detail)
-- The six-area table (folder → slug mapping)
-- File Routing Decision Tree (the numbered 0–9 walk)
-- Frontmatter Taxonomy (the `type` values table; do NOT restate field shapes — point at templates)
-- Cross-System Identity table (display name / slug / org dir / repo / Linear / hub)
-- Privacy Inheritance rule
-- Orphan-Note Rule
-- Memory System safety rule
-- Note Quality Rules (the 10 numbered)
-- Vault Search Strategy pointer
-- Git Workflow conventions
-- Note Relationships guidance
+- `## Vault Structure` (with pointer to `system-settings/vault-structure.md` for detail)
+- `## Areas` (folder → slug mapping table)
+- `## File Routing — Decision Tree` (the numbered 0–9 walk)
+- `## Frontmatter Taxonomy` (the `type` values table; do NOT restate field shapes — point at templates)
+- `## Cross-System Identity` (display name / slug / org dir / repo / Linear / hub)
+- `## Privacy Inheritance`
+- `## Orphan-Note Rule`
+- `## Memory System` (safety rule — do NOT use without permission)
+- `## Note Quality Rules` (the 10 numbered)
+- `## Vault Search Strategy`
+- `## Git Workflow`
 
 If the user's vault has customizations to the old `CLAUDE.md` that aren't covered by the canonical `AGENTS.md` (e.g., a personal section, a project they added a custom rule for), preserve those — append them to the new `AGENTS.md` under a clearly-labeled "Local customizations" section at the bottom. Ask the user before discarding anything from the old file.
 
 ### File: `CLAUDE.md` (rewrite at vault root)
 
-Replace the entire contents with this 5-line pointer:
-
-```markdown
-# CLAUDE.md
-
-This vault's canonical instruction file is `AGENTS.md` — agent-agnostic, read by Claude Code, Codex, and others. Claude Code reads `CLAUDE.md`, so this file imports it. Add Claude-specific instructions below the import if ever needed.
-
-@AGENTS.md
-```
+Replace `CLAUDE.md` with the kit's canonical version: `cp $(cat .vault-kit-path)/vault-files/CLAUDE.md CLAUDE.md`. (The kit's CLAUDE.md is a 5-line pointer that imports `AGENTS.md` via `@AGENTS.md`.)
 
 Before overwriting, **back up the old `CLAUDE.md`** to `CLAUDE.md.pre-agents-md-update` so the user can recover anything that was lost in the rewrite. (Not deleted automatically — the user can `rm` it once they're satisfied.)
 
@@ -98,7 +89,7 @@ Always show the diff to the user before replacing a template.
 
 After applying, all of these must be true:
 
-- `AGENTS.md` exists at vault root and is at least 100 lines (the canonical version is ~140 lines).
+- `AGENTS.md` exists at vault root and is at least 100 lines (the canonical version is ~130 lines).
 - `CLAUDE.md` exists at vault root, is between 4 and 8 lines, and contains the literal string `@AGENTS.md`.
 - `system-settings/vault-structure.md` exists.
 - `CLAUDE.md.pre-agents-md-update` exists at vault root (the backup).
@@ -115,7 +106,7 @@ git checkout CLAUDE.md
 rm AGENTS.md system-settings/vault-structure.md CLAUDE.md.pre-agents-md-update
 ```
 
-If the vault is not in a git repo, the backup `CLAUDE.md.pre-agents-md-update` is the manual recovery path for the old `CLAUDE.md`. The new files (`AGENTS.md`, `vault-structure.md`) can simply be deleted.
+If the vault is not in a git repo, the backup `CLAUDE.md.pre-agents-md-update` is the manual recovery path for the old `CLAUDE.md`. The new files (`AGENTS.md`, `system-settings/vault-structure.md`) can simply be deleted.
 
 ## Notes for the human running this
 
