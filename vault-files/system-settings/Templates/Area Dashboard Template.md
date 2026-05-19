@@ -82,7 +82,9 @@ filters:
   and:
     - type == "task"
     - area == "{{VALUE:area slug}}"
-    - status == "todo" OR status == "active"
+    - or:
+        - status == "todo"
+        - status == "active"
 views:
   - type: table
     name: Active Tasks
