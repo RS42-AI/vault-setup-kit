@@ -38,6 +38,11 @@ fi
 echo "Target vault: $VAULT"
 echo ""
 
+if [ "$UPDATE_MODE" -eq 1 ]; then
+  echo "[update] Recording kit path to $VAULT/.vault-kit-path"
+  echo "$SCRIPT_DIR" > "$VAULT/.vault-kit-path"
+fi
+
 # --- 1. Create folder structure ---
 echo "[1/4] Creating folder structure..."
 
