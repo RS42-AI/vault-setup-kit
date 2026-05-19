@@ -37,6 +37,7 @@ views:
     sort:
       - property: priority
         direction: ASC
+    filter: path != "system-settings/Templates/Task Note Template"
     columnSize:
       file.name: 350
       note.project: 130
