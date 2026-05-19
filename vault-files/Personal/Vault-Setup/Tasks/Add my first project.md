@@ -39,7 +39,7 @@ Avoid: anything that fits in one sitting (just make a task instead) or anything 
 
 ### 2. Decide which area it belongs to
 
-Areas are stable life domains: `personal`, `health`, `personal-finance`, `career`, etc. (See `CLAUDE.md` at the vault root for the canonical list.) Pick the one that fits.
+Areas are stable life domains: `personal`, `health`, `personal-finance`, `career`, etc. (See `AGENTS.md` at the vault root for the canonical list.) Pick the one that fits.
 
 If your project is a personal-life project, the folder lives at the vault root: `Personal/{Project-Name}/`. If it's a work or business project, it lives at `2. Projects/{Area}/{Project-Name}/`.
 
@@ -89,6 +89,6 @@ Once you have those, the project hub's embedded queries will populate with your 
 
 ## See also
 
-- `CLAUDE.md` (vault root) — Decision Tree and frontmatter taxonomy
+- `AGENTS.md` (vault root) — Decision Tree and frontmatter taxonomy
 - [[AI Workstation Organization - Filesystem and Vault Mapping Architecture]]
 - [[Vault-Setup]] — back to the orientation hub

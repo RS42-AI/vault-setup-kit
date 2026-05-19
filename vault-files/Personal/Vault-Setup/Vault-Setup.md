@@ -40,7 +40,7 @@ Three properties on every note do the routing:
 
 Set those three properties and the note shows up where it should — on the area dashboard, on the project hub, in your daily note. No manual filing.
 
-The full taxonomy and decision tree live in `CLAUDE.md` at the vault root — that's also the file the AI reads to understand how to behave inside your vault.
+The full taxonomy and decision tree live in `AGENTS.md` at the vault root — that's also the file the AI reads to understand how to behave inside your vault. (`CLAUDE.md` is a one-line pointer that imports `AGENTS.md` so Claude Code picks it up automatically.)
 
 ---
 
@@ -91,7 +91,7 @@ You're done with onboarding when:
 - You've read the 9 curriculum notes
 - You have one real project of your own with a hub, at least one task, and at least one devlog
 - You've set at least one quarterly goal
-- You've edited `CLAUDE.md` to reflect your areas, projects, and conventions
+- You've generated `AGENTS.md` to reflect your areas, external systems, and conventions
 
 After that, this `Vault-Setup` project becomes reference material — keep it around, but it stops being active work.
 
@@ -100,4 +100,4 @@ After that, this `Vault-Setup` project becomes reference material — keep it ar
 ## Related
 
 - [[Personal]] — your personal area dashboard
-- `CLAUDE.md` (vault root) — the AI's instruction manual for this vault
+- `AGENTS.md` (vault root) — the AI's instruction manual for this vault (`CLAUDE.md` imports it as a one-line pointer)
