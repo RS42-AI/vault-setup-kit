@@ -18,3 +18,13 @@ load test_helper
   [ "$status" -eq 0 ]
   [[ "$output" == *"Update Mode"* ]]
 }
+
+@test "setup-vault.sh --update writes .vault-kit-path with absolute kit path" {
+  setup_test_vault
+  run bash "$KIT_ROOT/setup-vault.sh" --update "$TEST_VAULT"
+  [ "$status" -eq 0 ]
+  [ -f "$TEST_VAULT/.vault-kit-path" ]
+  local recorded
+  recorded="$(cat "$TEST_VAULT/.vault-kit-path")"
+  [ "$recorded" = "$KIT_ROOT" ]
+}
