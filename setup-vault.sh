@@ -44,11 +44,13 @@ echo "Target vault: $VAULT"
 echo ""
 
 if [ "$UPDATE_MODE" -eq 1 ]; then
+  if [ ! -d "$VAULT" ]; then
+    echo "ERROR: --update requires an existing vault. $VAULT does not exist."
+    echo "       For a fresh install, run: bash setup-vault.sh $VAULT"
+    exit 1
+  fi
   echo "[update] Recording kit path to $VAULT/.vault-kit-path"
   echo "$SCRIPT_DIR" > "$VAULT/.vault-kit-path"
-fi
-
-if [ "$UPDATE_MODE" -eq 1 ]; then
   echo "[update] Installing /update-structure slash command"
   mkdir -p "$VAULT/.claude/commands"
   cp "$SCRIPT_DIR/commands/update-structure.md" "$VAULT/.claude/commands/update-structure.md"
