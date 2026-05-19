@@ -10,6 +10,7 @@ allowed-tools:
   - Bash(find:*)
   - Bash(mv:*)
   - Bash(mkdir:*)
+  - Bash(cp:*)
   - Bash(diff:*)
   - Bash(git status:*)
   - Bash(git diff:*)
@@ -60,13 +61,15 @@ The command must run from inside the user's vault directory (where `CLAUDE.md` o
 
 After confirming the vault root, read `.vault-kit-path` from the vault root. If the file doesn't exist, stop and tell the user to run `bash setup-vault.sh --update <vault>` from the kit before retrying.
 
+Run `git status` from the vault root. If the vault is not a git repo, warn the user that rollback will require manual file deletion and ask whether to proceed. If there are uncommitted changes, ask the user whether to proceed (the kit's added files will mix with their pending work). Default to safer: do not proceed unless they explicitly say to.
+
 ## Step 2 — Read applied-updates log
 
 Read `.vault-structure-updates-applied` (newline-delimited list of structure update ids). If the file doesn't exist, treat as empty (this is the user's first structure update run).
 
 ## Step 3 — List available structure updates
 
-List `$(cat .vault-kit-path)/structure-updates/*.md` sorted by filename (date prefix sorts chronologically). For each, parse the frontmatter to get `id`, `date`, `description`, and `applies_when`.
+List `$(cat .vault-kit-path)/structure-updates/*.md` sorted by filename (date prefix sorts chronologically). For each, parse the frontmatter to get `id`, `date`, and `description`.
 
 ## Step 4 — Filter to candidates
 
@@ -109,13 +112,15 @@ Ask the user to confirm before applying. Accept: `yes`, `y`, `apply`, `skip`, `a
 
 ## Step 7 — Execute the changes
 
+If the user invoked with `--dry-run`, skip the execution below and skip Step 8 (there is nothing to verify). Instead, after Step 6's summary, print `[dry-run: no changes made]` and proceed to the next candidate.
+
 Walk the structure update doc's **Changes** section file by file. Each change block tells Claude what to do in plain language with file paths and content snippets. Use `Read` → reason → `Edit`/`Write`/`Bash` as appropriate. After each file change, do a sanity-check Read to confirm the change took.
 
 If a change references a file that doesn't exist in the user's vault, ask the user before creating it (the structure update may have been written against a slightly different layout).
 
 ## Step 8 — Verify
 
-The structure update doc's **Verification** section lists invariants to check post-apply (e.g., "AGENTS.md exists and is non-empty", "CLAUDE.md contains the line `@AGENTS.md`"). Run each check. If any fail, stop and report — do NOT record the structure update as applied.
+The structure update doc's **Verification** section lists invariants to check post-apply (e.g., "AGENTS.md exists and is non-empty", "CLAUDE.md contains the line `@AGENTS.md`"). Run each check. If any fail, stop the entire `/update-structure` run — do not attempt subsequent candidates. Report which check failed, list which files were changed before the failure, and point the user at the `## Rollback` section of the structure update doc. Do NOT record the structure update as applied.
 
 ## Step 9 — Record
 
