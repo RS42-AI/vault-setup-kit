@@ -1,16 +1,21 @@
 #!/usr/bin/env bash
-# setup-vault.sh — Bootstrap an Obsidian vault with hub-and-spoke structure
+# setup-vault.sh — Bootstrap or update an Obsidian vault with hub-and-spoke structure
 #
-# Usage: bash setup-vault.sh [vault_path]
+# Usage:
+#   bash setup-vault.sh [vault_path]
+#     Fresh install: creates folder structure, copies starter content (non-clobber),
+#     initializes git.
+#
+#   bash setup-vault.sh --update [vault_path]
+#     Update existing vault: installs /update-structure slash command, records
+#     kit path in <vault>/.vault-kit-path, then runs the same non-clobber copy
+#     to add any new canonical files (e.g. AGENTS.md in v0.2).
+#     User then runs /update-structure in Claude Code to apply outstanding
+#     structure updates.
+#
 #   vault_path defaults to ~/Claude/ObsidianVault
 #
-# What it does:
-#   1. Creates the hub-and-spoke folder structure
-#   2. Copies vault-files/* over the vault (templates, area dashboards,
-#      starter Vault-Setup project, CLAUDE.md) — never overwrites
-#   3. Initializes git if not already a repo
-#
-# Safe to re-run — skips existing files (never overwrites).
+# Safe to re-run in either mode — never overwrites user files.
 
 set -euo pipefail
 
