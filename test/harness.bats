@@ -45,6 +45,13 @@ load test_helper
   [ -f "$TEST_VAULT/AGENTS.md" ]
 }
 
+@test "vault-files/AGENTS.md ships the search-then-link Note Creation Procedure" {
+  run grep -q "## Note Creation Procedure" "$KIT_ROOT/vault-files/AGENTS.md"
+  [ "$status" -eq 0 ]
+  run grep -q "Search the vault first" "$KIT_ROOT/vault-files/AGENTS.md"
+  [ "$status" -eq 0 ]
+}
+
 @test "setup-vault.sh --update next-steps mention /update-structure" {
   setup_test_vault
   run bash "$KIT_ROOT/setup-vault.sh" --update "$TEST_VAULT"
