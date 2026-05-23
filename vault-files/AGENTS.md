@@ -5,16 +5,17 @@
 1. [Vault Structure](#vault-structure)
 2. [Areas](#areas)
 3. [File Routing — Decision Tree](#file-routing--decision-tree)
-4. [Frontmatter Taxonomy](#frontmatter-taxonomy)
-5. [Devlog Task Linking](#devlog-task-linking)
-6. [Cross-System Identity](#cross-system-identity-optional--fill-in-if-you-use-external-systems)
-7. [Privacy Inheritance](#privacy-inheritance-only-if-you-have-or-expect-private-projects--otherwise-omit)
-8. [Orphan-Note Rule](#orphan-note-rule)
-9. [Memory System](#memory-system--do-not-use-without-permission)
-10. [Note Quality Rules](#note-quality-rules)
-11. [Vault Search Strategy](#vault-search-strategy)
-12. [Git Workflow](#git-workflow)
-13. [Maintenance](#maintenance)
+4. [Note Creation Procedure](#note-creation-procedure)
+5. [Frontmatter Taxonomy](#frontmatter-taxonomy)
+6. [Devlog Task Linking](#devlog-task-linking)
+7. [Cross-System Identity](#cross-system-identity-optional--fill-in-if-you-use-external-systems)
+8. [Privacy Inheritance](#privacy-inheritance-only-if-you-have-or-expect-private-projects--otherwise-omit)
+9. [Orphan-Note Rule](#orphan-note-rule)
+10. [Memory System](#memory-system--do-not-use-without-permission)
+11. [Note Quality Rules](#note-quality-rules)
+12. [Vault Search Strategy](#vault-search-strategy)
+13. [Git Workflow](#git-workflow)
+14. [Maintenance](#maintenance)
 
 Canonical instruction file for this vault — read by any agent (Claude Code, Codex, and whatever comes next). `CLAUDE.md` is a one-line pointer to this file.
 
@@ -58,6 +59,17 @@ When creating a note, walk these in order:
 7. Curated reference material → `5. Resources/{Area}/`
 8. General technical knowledge → `6. Main Notes/`
 9. Not sure → ask the user
+
+## Note Creation Procedure
+
+Creating a note is a **four-step procedure**, not a one-step "write the file." The routing tree above is only step 2. The reason notes feel disconnected is almost always a skipped step 1 or step 3.
+
+1. **Search the vault first.** Before writing, search for notes on the same or adjacent topics — keyword search for exact terms and file names, semantic/vector search when the wording may differ (see [Vault Search Strategy](#vault-search-strategy)). You are looking for two things: (a) an existing canonical note you'd be duplicating, and (b) the hub note(s) and related notes this new note should connect to.
+2. **Route it.** Use the File Routing decision tree above to choose the folder and set `type` / `area` / `project`.
+3. **Wikilink into the graph.** Add `[[wikilinks]]` to the related notes and hub(s) you found in step 1. If the note is a child of a hub, add a `> **Parent**: [[Hub Note]]` backlink near the top. **A new note with zero outgoing links is a smell** — it means you skipped the search, or this is genuinely the first note on a brand-new topic (rare in an established vault). Do not finalize a zero-link note without consciously confirming it's the latter.
+4. **Verify uniqueness.** Confirm you're not duplicating an existing canonical note (Note Quality Rules 3 and 10). If a canonical note already exists, extend or link it instead of creating a parallel one.
+
+This procedure applies to **every** note you create — both slash-command outputs and ad-hoc "take a note about this" moments. The vault grows correctly only if the graph is woven on the way in.
 
 ## Frontmatter Taxonomy
 
@@ -120,7 +132,7 @@ A knowledge note is "orphan" when it has `date: X` but no devlog from the same p
 
 1. **No context re-explanation** — link to previous notes, don't re-explain them.
 2. **Max 500 lines per note** — split with pipe aliases: `## [[Full Name|Short Name]]`.
-3. **One canonical note per concept** — search before creating; link, don't duplicate.
+3. **One canonical note per concept** — *search the vault before creating* (see [Note Creation Procedure](#note-creation-procedure)), then link, don't duplicate.
 4. **Corrections replace, never supplement** — update the original, don't add a parallel note.
 5. **Session logs ≠ knowledge notes** — devlogs in the project's `Dev Log/`, knowledge in main folders.
 6. **Project notes go in project folders** — check `2. Projects/` and `Personal/` before defaulting to `6. Main Notes/`.
