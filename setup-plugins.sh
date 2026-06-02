@@ -343,7 +343,7 @@ fi
 echo ""
 
 # --- 3. Update community-plugins.json ---
-echo "[3/3] Updating community-plugins.json..."
+echo "[3/4] Updating community-plugins.json..."
 
 cat > "$VAULT/.obsidian/community-plugins.json" << 'EOF'
 [
@@ -361,6 +361,27 @@ cat > "$VAULT/.obsidian/community-plugins.json" << 'EOF'
 EOF
 
 echo "  Enabled 10 plugins in community-plugins.json"
+
+echo ""
+
+# --- 4. Set default attachment folder ---
+# Without this, Obsidian's default sends pasted images/screenshots to the vault
+# root. Point them at system-settings/Pasted Images to match the canonical vault.
+echo "[4/4] Setting attachment folder location..."
+
+APP_JSON="$VAULT/.obsidian/app.json"
+if [ ! -f "$APP_JSON" ]; then
+  cat > "$APP_JSON" << 'EOF'
+{
+  "attachmentFolderPath": "system-settings/Pasted Images"
+}
+EOF
+  echo "  Set attachments -> system-settings/Pasted Images"
+else
+  echo "  SKIP (app.json exists): not overwriting existing Obsidian settings."
+  echo "  If pasted images land in the vault root, set Settings -> Files & Links"
+  echo "  -> 'Default location for new attachments' to system-settings/Pasted Images."
+fi
 
 echo ""
 echo "=== Plugin Setup Complete ==="
