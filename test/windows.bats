@@ -9,6 +9,7 @@ load test_helper
   run bun_install_cmd "Darwin"
   [ "$status" -eq 0 ]
   [[ "$output" == *"brew install"*"bun"* ]]
+  [[ "$output" != *"bun.sh"* ]]
   run bun_install_cmd "Linux"
   [ "$status" -eq 0 ]
   [[ "$output" == *"bun.sh/install"* ]]
@@ -19,7 +20,6 @@ load test_helper
 @test "write_terminal_config emits a win32 wsl.exe profile and valid JSON" {
   setup_test_vault
   local dir="$TEST_VAULT/.obsidian/plugins/terminal"
-  mkdir -p "$dir"
   KIT_SOURCE_ONLY=1 source "$KIT_ROOT/setup-plugins.sh"
   write_terminal_config "$dir"
   [ -f "$dir/data.json" ]

@@ -8,7 +8,7 @@
 #
 # Prerequisites:
 #   - Obsidian vault exists at the target path
-#   - curl available (ships with macOS)
+#   - curl available (ships with macOS; pre-installed on Ubuntu/WSL)
 #
 # Usage: bash setup-plugins.sh [vault_path]
 #   vault_path defaults to ~/Claude/ObsidianVault
@@ -157,6 +157,8 @@ echo "[2/3] Writing plugin configurations..."
 
 # --- Terminal ---
 echo "  Configuring: Terminal"
+# Terminal: the win32 profile launches the default WSL distro via wsl.exe.
+# If the user's default distro is not Ubuntu, add "-d Ubuntu" to that profile's args.
 write_terminal_config "$PLUGINS_DIR/terminal"
 
 # --- Linter ---

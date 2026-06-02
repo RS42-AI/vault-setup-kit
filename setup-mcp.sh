@@ -4,7 +4,7 @@
 # Prerequisites:
 #   - Claude Code CLI installed (npm install -g @anthropic-ai/claude-code)
 #   - Obsidian running with Local REST API plugin enabled
-#   - bun installed (for QMD)
+#   - bun (auto-installed: Homebrew on macOS, bun.sh/install on Linux/WSL)
 #
 # Usage: bash setup-mcp.sh [vault_path]
 #   vault_path defaults to ~/Claude/ObsidianVault
@@ -32,6 +32,8 @@ ensure_bun() {
   if [ "$os" = "Darwin" ]; then
     if command -v brew &>/dev/null; then
       brew install oven-sh/bun/bun
+      local brew_prefix; brew_prefix="$(brew --prefix)"
+      export PATH="$brew_prefix/bin:$PATH"
     else
       echo "  WARNING: Homebrew missing; install bun manually"
       return 1
@@ -41,6 +43,7 @@ ensure_bun() {
     export BUN_INSTALL="${BUN_INSTALL:-$HOME/.bun}"
     export PATH="$BUN_INSTALL/bin:$PATH"
   fi
+  # $HOME/.bun/bin/bun is the default install location for the Linux/WSL bun.sh installer
   command -v bun &>/dev/null || [ -x "$HOME/.bun/bin/bun" ]
 }
 
