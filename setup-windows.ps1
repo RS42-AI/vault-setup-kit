@@ -17,10 +17,11 @@ function Test-Admin { ([Security.Principal.WindowsPrincipal] `
   [Security.Principal.WindowsBuiltinRole]::Administrator) }
 
 function Test-WslReady {
-  # WSL present AND a distro installed (not just the feature enabled)
   if (-not (Get-Command wsl.exe -ErrorAction SilentlyContinue)) { return $false }
-  $list = (wsl.exe --list --quiet) 2>$null
-  return ($LASTEXITCODE -eq 0 -and $list -match $Distro)
+  # wsl --list --quiet emits UTF-16LE on some Windows builds; re-encode to UTF-8 before matching.
+  $raw = [byte[]](wsl.exe --list --quiet)
+  $list = [System.Text.Encoding]::Unicode.GetString($raw) -replace '\x00', ''
+  return ($LASTEXITCODE -eq 0 -and $list -match [regex]::Escape($Distro))
 }
 
 # Phase 1 — preflight
@@ -44,6 +45,7 @@ command -v claude >/dev/null || sudo npm install -g @anthropic-ai/claude-code
 command -v bun >/dev/null || { curl -fsSL https://bun.sh/install | bash; }
 '@
 $bootstrap | wsl.exe -d $Distro -- bash -s
+if ($LASTEXITCODE -ne 0) { throw "WSL prerequisite install failed (exit $LASTEXITCODE). See errors above." }
 
 # Phase 4 — clone/locate the kit inside WSL and run the EXISTING setup.sh
 # Double-quoted here-string: $KitRepo expands (PowerShell var); `$HOME and `$KIT
@@ -52,15 +54,17 @@ $run = @"
 set -euo pipefail
 KIT="`$HOME/vault-setup-kit"
 [ -d "`$KIT/.git" ] || git clone $KitRepo "`$KIT"
-cd "`$KIT" && git pull --ff-only || true
+cd "`$KIT" && (git pull --ff-only 2>&1 || echo "  WARNING: git pull skipped (offline or diverged HEAD); running existing local version")
 bash setup.sh
 "@
 $run | wsl.exe -d $Distro -- bash -s
+if ($LASTEXITCODE -ne 0) { throw "WSL setup.sh failed (exit $LASTEXITCODE). See errors above." }
 
 # Phase 5 — tell the user how to open the vault from Windows Obsidian
 # wsl`$ — backtick-escaped so the literal share name "wsl$" is written, not a variable.
 # $Distro and $wslUser — no escape, these ARE PowerShell variables that should expand.
 $wslUser = (wsl.exe -d $Distro -- bash -lc 'echo $USER').Trim()
+if (-not $wslUser) { $wslUser = "<your-username>" }
 Write-Host "`n=== Done ===" -ForegroundColor Green
 Write-Host "Open Obsidian (Windows) and 'Open folder as vault' at:"
 Write-Host "  \\wsl`$\$Distro\home\$wslUser\Claude\ObsidianVault" -ForegroundColor Cyan
