@@ -9,6 +9,7 @@
 #
 # Usage: bash setup.sh [vault_path]
 #   vault_path defaults to ~/Claude/ObsidianVault
+#   SETUP_YES=1 = non-interactive (skip the "Press Enter" GUI-coordination pauses)
 
 set -euo pipefail
 
@@ -28,7 +29,7 @@ echo ""
 echo "------------------------------------------------------------"
 echo "  Plugins step requires Obsidian to be CLOSED."
 echo "  Press Enter when ready (or Ctrl+C to skip)."
-read -r
+[ -n "${SETUP_YES:-}" ] || read -r
 echo "------------------------------------------------------------"
 echo ""
 
@@ -39,7 +40,7 @@ echo "------------------------------------------------------------"
 echo "  Now OPEN Obsidian, point it at $VAULT,"
 echo "  and enable: Local REST API, Templater, Dataview, MCP Tools"
 echo "  Then come back and press Enter to continue MCP setup."
-read -r
+[ -n "${SETUP_YES:-}" ] || read -r
 echo "------------------------------------------------------------"
 echo ""
 

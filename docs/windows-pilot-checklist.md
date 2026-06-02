@@ -60,11 +60,13 @@ Items marked **[REQUIRED]** block the Dad install. Items marked **[NICE-TO-HAVE]
 
 ---
 
-## Phase 4 — Kit clone + `bash setup.sh` [REQUIRED]
+## Phase 4 — Kit clone + headless vault/plugins, then PowerShell key prompt [REQUIRED]
+
+> `setup-windows.ps1` no longer pipes the interactive `setup.sh`. It drives the sub-scripts directly: vault + plugins run headless, then PowerShell pauses in the console for the Obsidian handshake.
 
 - [ ] Script clones (or locates) the vault-setup-kit inside WSL at `~/vault-setup-kit`.
-- [ ] `bash setup.sh` runs to completion — vault folders, plugins, and MCP setup all run.
-- [ ] Script prints `=== Done ===` and shows the `\\wsl$\Ubuntu\home\<user>\Claude\ObsidianVault` path.
+- [ ] `setup-vault.sh` and `setup-plugins.sh` run HEADLESS to completion — no "Press Enter" pause, no abort. (They run with `SETUP_YES=1`.)
+- [ ] Script then prints the Obsidian-handshake instructions and the `\\wsl$\Ubuntu\home\<user>\Claude\ObsidianVault` path, and stops at the `Read-Host` key prompt.
 - [ ] Record the exact WSL path printed: _______________________________________
 
 ---
@@ -89,15 +91,16 @@ Confirm these four plugins are enabled in Obsidian (Settings → Community plugi
 
 > `setup-plugins.sh` should have enabled them. If any are listed but not toggled on, enable them manually here.
 
-### 5c. R4 check: API key copy/paste [REQUIRED]
+### 5c. R4 check: API key copy/paste into the PowerShell prompt [REQUIRED]
 
-> R4 risk: the Local REST API key is generated in Windows-side Obsidian and must be pasted into the WSL terminal prompt during `setup-mcp.sh`. This is a manual clipboard bridge.
+> R4 risk: the Local REST API key is generated in Windows-side Obsidian and must be pasted into the prompt that drives `setup-mcp.sh`. This is a manual clipboard bridge. With the new flow the paste happens in the **PowerShell console** (real TTY) — `setup-windows.ps1`'s `Read-Host` — not a re-run of `setup-mcp.sh`.
 
 - [ ] In Obsidian: Settings → Community plugins → Local REST API → copy the API Key to clipboard.
-- [ ] If `setup-mcp.sh` already ran during Phase 4 and skipped the key (you pressed Enter), re-run it inside WSL: open Ubuntu terminal and run `bash ~/vault-setup-kit/setup-mcp.sh`.
-- [ ] When `setup-mcp.sh` prompts "Paste the Local REST API key (or press Enter to skip):", paste the key from clipboard — it appears in the terminal and the script accepts it.
+- [ ] At the PowerShell prompt "Paste the Local REST API key (or press Enter to skip MCP for now)", paste the key and press Enter. PowerShell passes it to `setup-mcp.sh` via `OBSIDIAN_API_KEY`.
 - [ ] Script prints "Registered obsidian-mcp-tools."
 - [ ] Manually add the API key env var to `~/.claude.json` (the script prints the exact JSON snippet to add). Confirm the entry is in the file after editing.
+
+> If you pressed Enter to SKIP at the prompt, MCP was not registered. Re-run it later inside WSL: open the Ubuntu terminal and run `OBSIDIAN_API_KEY=<your-key> bash ~/vault-setup-kit/setup-mcp.sh`.
 
 ---
 

@@ -77,6 +77,18 @@ load test_helper
   [ "$rc" -ne 0 ]
 }
 
+# --- setup-mcp.sh: get_api_key reads the env var non-interactively ---
+
+@test "get_api_key returns the OBSIDIAN_API_KEY env var when set" {
+  KIT_SOURCE_ONLY=1 source "$KIT_ROOT/setup-mcp.sh"
+  # With the env var set, get_api_key must NOT prompt (no read → no hang) and
+  # must echo the supplied key verbatim. Running this proves the Windows
+  # bootstrap can pass the key non-interactively.
+  OBSIDIAN_API_KEY=testkey123 run get_api_key
+  [ "$status" -eq 0 ]
+  [ "$output" = "testkey123" ]
+}
+
 # --- setup-plugins.sh: win32 terminal profile ---
 
 @test "write_terminal_config emits a win32 wsl.exe profile and valid JSON" {

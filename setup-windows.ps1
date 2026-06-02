@@ -1,8 +1,10 @@
 #Requires -Version 5.1
 <#
   setup-windows.ps1 — One-file Windows entry point for the vault-setup-kit.
-  Enables WSL2 + Ubuntu, installs prerequisites inside WSL, then runs the
-  EXISTING bash setup.sh unchanged. The user never types a Linux command.
+  Enables WSL2 + Ubuntu, installs prerequisites inside WSL, then drives the kit's
+  sub-scripts directly: vault + plugins run headless, then PowerShell pauses (real
+  console TTY) to collect the Local REST API key and finishes MCP + Personal OS.
+  The user never types a Linux command.
 
   Usage (from an elevated PowerShell):  .\setup-windows.ps1
 #>
@@ -47,24 +49,57 @@ command -v bun >/dev/null || { curl -fsSL https://bun.sh/install | bash; }
 $bootstrap | wsl.exe -d $Distro -- bash -s
 if ($LASTEXITCODE -ne 0) { throw "WSL prerequisite install failed (exit $LASTEXITCODE). See errors above." }
 
-# Phase 4 — clone/locate the kit inside WSL and run the EXISTING setup.sh
+# Phase 4 — drive the sub-scripts directly, with the human-coordination pauses
+# happening here in the PowerShell console (a real TTY) instead of piping the
+# interactive setup.sh into a TTY-less bash -s (which aborts at its read pauses).
+
+# 4.1 — clone/locate the kit inside WSL.
 # Double-quoted here-string: $KitRepo expands (PowerShell var); `$HOME and `$KIT
 # are backtick-escaped so they reach bash as literal $HOME and $KIT.
-$run = @"
+$clone = @"
 set -euo pipefail
 KIT="`$HOME/vault-setup-kit"
 [ -d "`$KIT/.git" ] || git clone $KitRepo "`$KIT"
 cd "`$KIT" && (git pull --ff-only 2>&1 || echo "  WARNING: git pull skipped (offline or diverged HEAD); running existing local version")
-bash setup.sh
 "@
-$run | wsl.exe -d $Distro -- bash -s
-if ($LASTEXITCODE -ne 0) { throw "WSL setup.sh failed (exit $LASTEXITCODE). See errors above." }
+$clone | wsl.exe -d $Distro -- bash -s
+if ($LASTEXITCODE -ne 0) { throw "WSL kit clone/pull failed (exit $LASTEXITCODE). See errors above." }
 
-# Phase 5 — tell the user how to open the vault from Windows Obsidian
+# 4.2 — run vault + plugins HEADLESS (neither pauses; SETUP_YES=1 belt-and-suspenders).
+# `$HOME backtick-escaped so it reaches bash literally; SETUP_YES is a bash assignment.
+$headless = @"
+set -euo pipefail
+cd "`$HOME/vault-setup-kit"
+SETUP_YES=1 bash setup-vault.sh
+SETUP_YES=1 bash setup-plugins.sh
+"@
+$headless | wsl.exe -d $Distro -- bash -s
+if ($LASTEXITCODE -ne 0) { throw "WSL vault/plugins setup failed (exit $LASTEXITCODE). See errors above." }
+
+# 4.3 — compute the WSL username NOW so we can show the real \\wsl$ path in the prompt.
 # wsl`$ — backtick-escaped so the literal share name "wsl$" is written, not a variable.
-# $Distro and $wslUser — no escape, these ARE PowerShell variables that should expand.
 $wslUser = (wsl.exe -d $Distro -- bash -lc 'echo $USER').Trim()
 if (-not $wslUser) { $wslUser = "<your-username>" }
+$vaultPath = "\\wsl`$\$Distro\home\$wslUser\Claude\ObsidianVault"
+
+# 4.4 — PowerShell pause (real console): open Obsidian, enable plugins, grab the key.
+Write-Host "`n------------------------------------------------------------" -ForegroundColor Cyan
+Write-Host "Obsidian handshake needed before MCP can register:" -ForegroundColor Cyan
+Write-Host "  1. Open Obsidian (Windows) -> 'Open folder as vault' at:"
+Write-Host "       $vaultPath" -ForegroundColor Yellow
+Write-Host "  2. Enable these community plugins: Local REST API, MCP Tools, Templater, Dataview."
+Write-Host "  3. Copy the key from Settings -> Local REST API -> API Key."
+Write-Host "------------------------------------------------------------" -ForegroundColor Cyan
+$apiKey = Read-Host "Paste the Local REST API key (or press Enter to skip MCP for now)"
+
+# 4.5 — run MCP + Personal OS plugin in WSL, passing the key via env.
+# REST API keys are hex (no quotes/specials), so single-quoting $apiKey inside the
+# bash -lc string is safe. $apiKey and $Distro are PowerShell vars and expand here.
+wsl.exe -d $Distro -- bash -lc "cd ~/vault-setup-kit && OBSIDIAN_API_KEY='$apiKey' bash setup-mcp.sh && bash setup-claude-plugins.sh"
+if ($LASTEXITCODE -ne 0) { throw "WSL MCP/plugin setup failed (exit $LASTEXITCODE). See errors above." }
+
+# Phase 5 — done; remind the user how to open the vault and run the daily commands.
 Write-Host "`n=== Done ===" -ForegroundColor Green
 Write-Host "Open Obsidian (Windows) and 'Open folder as vault' at:"
-Write-Host "  \\wsl`$\$Distro\home\$wslUser\Claude\ObsidianVault" -ForegroundColor Cyan
+Write-Host "  $vaultPath" -ForegroundColor Cyan
+Write-Host "Claude Code + Personal OS commands run inside WSL: open the Ubuntu app and run /start-day." -ForegroundColor Cyan

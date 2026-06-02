@@ -54,7 +54,9 @@ You can also run any step individually if you only need to refresh part of the s
 1. Clone or download this repo on your Windows machine.
 2. Right-click `setup-windows.ps1` and choose **Run as administrator** (or run `.\setup-windows.ps1` from an elevated PowerShell).
 3. The script installs WSL2 + Ubuntu and then **prompts you to restart your PC**. After restarting, run `setup-windows.ps1` again — it detects WSL is already installed and picks up where it left off.
-4. On the second run the script installs Node, Claude Code, and bun inside WSL, then runs `setup.sh` to build the vault.
+4. On the second run the script installs Node, Claude Code, and bun inside WSL, then builds the vault and installs the Obsidian plugins (headless). It then **pauses in the PowerShell console** and asks you to open Obsidian, enable the plugins, and paste the Local REST API key. After you paste the key, it finishes the MCP servers and the Personal OS plugin.
+
+There is one unavoidable interactive step — opening Obsidian and pasting the REST API key — exactly as on macOS. Press Enter at the prompt to skip MCP for now; you can register it later inside WSL with `OBSIDIAN_API_KEY=<your-key> bash ~/vault-setup-kit/setup-mcp.sh`.
 
 **Opening the vault in Obsidian (Windows)**
 

@@ -149,6 +149,18 @@ ensure_bun() {
   command -v bun &>/dev/null || [ -x "$HOME/.bun/bin/bun" ]
 }
 
+get_api_key() {
+  # Prefer a pre-supplied env var (lets the Windows PowerShell bootstrap pass it
+  # non-interactively); fall back to an interactive prompt on macOS / direct runs.
+  if [ -n "${OBSIDIAN_API_KEY:-}" ]; then
+    echo "$OBSIDIAN_API_KEY"
+  else
+    local k
+    read -r -p "  Paste the Local REST API key (or press Enter to skip): " k
+    echo "$k"
+  fi
+}
+
 # Allow tests to source just the function definitions (skip the procedural body).
 [ "${KIT_SOURCE_ONLY:-0}" = "1" ] && return 0 2>/dev/null || true
 
@@ -203,7 +215,7 @@ else
   # TODO (v2): auto-fetch the API key by reading
   # $VAULT/.obsidian/plugins/obsidian-local-rest-api/data.json (the
   # plugin stores its generated key there). For now, paste manually.
-  read -r -p "  Paste the Local REST API key (or press Enter to skip): " API_KEY
+  API_KEY="$(get_api_key)"
 
   if [ -n "$API_KEY" ]; then
     claude mcp add obsidian-mcp-tools \
