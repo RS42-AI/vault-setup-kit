@@ -61,6 +61,22 @@ load test_helper
   [[ "$output" == *"assuming Linux binary"* ]]
 }
 
+# --- setup-mcp.sh: set -e safety of is_linux_elf rc capture (real function, no stub) ---
+
+@test "is_linux_elf on a non-ELF file returns nonzero without aborting under set -e" {
+  # Exercises the real is_linux_elf (no stub) on a plain text file.
+  # Verifies the set-e-safe capture idiom: even under set -euo pipefail the
+  # function's nonzero return must NOT abort the caller — rc is captured, not 0.
+  # Runs on macOS too: `file` is present and a text file is definitively non-ELF;
+  # if `file` were absent (rc==2), that is still -ne 0, so the assertion holds.
+  setup_test_vault
+  KIT_SOURCE_ONLY=1 source "$KIT_ROOT/setup-mcp.sh"
+  echo "not an elf" > "$TEST_VAULT/fake"
+  local rc=0
+  is_linux_elf "$TEST_VAULT/fake" || rc=$?
+  [ "$rc" -ne 0 ]
+}
+
 # --- setup-plugins.sh: win32 terminal profile ---
 
 @test "write_terminal_config emits a win32 wsl.exe profile and valid JSON" {

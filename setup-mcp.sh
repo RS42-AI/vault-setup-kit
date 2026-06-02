@@ -40,7 +40,7 @@ bun_install_cmd() {
 #   Asset:  mcp-server-linux
 #   URL:    https://github.com/jacksteamdev/obsidian-mcp-tools/releases/latest/download/mcp-server-linux
 # macOS runs are unaffected — this whole path is gated behind Linux/WSL detection.
-MCP_LINUX_ASSET_URL="https://github.com/jacksteamdev/obsidian-mcp-tools/releases/latest/download/mcp-server-linux"
+readonly MCP_LINUX_ASSET_URL="https://github.com/jacksteamdev/obsidian-mcp-tools/releases/latest/download/mcp-server-linux"
 
 is_wsl() {
   # WSL kernels report "microsoft" in /proc/version.
@@ -68,8 +68,11 @@ ensure_linux_mcp_binary() {
   local on_wsl="no"; is_wsl && on_wsl="yes"
 
   # Decide whether we already have a good Linux binary.
-  # Bug 1 fix: capture return code immediately — before any if/case can reset $?.
-  is_linux_elf "$bin"; local elf_rc=$?
+  # Bug 1 fix: set-e-safe rc capture — declare before calling so set -e can't fire
+  # between the call and the assignment; || rc=$? means nonzero return is handled
+  # by the list operator, not set -e.
+  local elf_rc=0
+  is_linux_elf "$bin" || elf_rc=$?
   if [ "$elf_rc" -eq 0 ]; then
     echo "  mcp-server is already a Linux ELF binary — leaving it in place."
     return 0
@@ -94,8 +97,11 @@ ensure_linux_mcp_binary() {
     return 0
   fi
   if curl -fsSL "$MCP_LINUX_ASSET_URL" -o "$bin.tmp" 2>/dev/null; then
-    is_linux_elf "$bin.tmp"; local tmp_elf_rc=$?
+    local tmp_elf_rc=0
+    is_linux_elf "$bin.tmp" || tmp_elf_rc=$?
     if [ "$tmp_elf_rc" -eq 0 ] || [ "$tmp_elf_rc" -eq 2 ]; then
+      # rc==2 means `file` is absent — curl -f already rejected HTTP errors,
+      # so we trust the download when we can't ELF-validate it.
       if ! mv "$bin.tmp" "$bin" 2>/dev/null; then
         rm -f "$bin.tmp" 2>/dev/null || true
         echo "  WARNING: could not move downloaded binary into place."
