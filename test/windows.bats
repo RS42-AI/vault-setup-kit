@@ -39,6 +39,28 @@ load test_helper
   [ ! -d "${BATS_TEST_TMPDIR}/bin" ]
 }
 
+# --- setup-mcp.sh: is_linux_elf rc==2 path (file utility absent) ---
+
+@test "ensure_linux_mcp_binary rc==2 path: bare-Linux + existing file → no-op (Bug 1 regression)" {
+  # Only meaningful when the host is Linux; on macOS ensure_linux_mcp_binary returns 0 immediately.
+  if [ "$(uname -s)" != "Linux" ]; then skip "host is not Linux; rc==2 no-op only applicable on Linux"; fi
+  KIT_SOURCE_ONLY=1 source "$KIT_ROOT/setup-mcp.sh"
+
+  # Stub is_linux_elf to always return 2 (simulates absent `file` utility).
+  is_linux_elf() { return 2; }
+  # Stub is_wsl to return 1 (bare Linux, not WSL).
+  is_wsl() { return 1; }
+
+  local bin="${BATS_TEST_TMPDIR}/bin/mcp-server"
+  mkdir -p "$(dirname "$bin")"
+  touch "$bin"   # file exists — bare Linux + no `file` → should keep it and return 0
+
+  run ensure_linux_mcp_binary "$bin"
+  [ "$status" -eq 0 ]
+  [ -f "$bin" ]
+  [[ "$output" == *"assuming Linux binary"* ]]
+}
+
 # --- setup-plugins.sh: win32 terminal profile ---
 
 @test "write_terminal_config emits a win32 wsl.exe profile and valid JSON" {

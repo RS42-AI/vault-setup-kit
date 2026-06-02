@@ -68,32 +68,45 @@ ensure_linux_mcp_binary() {
   local on_wsl="no"; is_wsl && on_wsl="yes"
 
   # Decide whether we already have a good Linux binary.
-  if is_linux_elf "$bin"; then
+  # Bug 1 fix: capture return code immediately — before any if/case can reset $?.
+  is_linux_elf "$bin"; local elf_rc=$?
+  if [ "$elf_rc" -eq 0 ]; then
     echo "  mcp-server is already a Linux ELF binary — leaving it in place."
     return 0
   fi
-  case "$?" in
-    2)
-      # `file` unavailable. On WSL the plugin path almost certainly holds a
-      # Windows .exe (Obsidian is the Windows app), so re-fetch to be safe.
-      # On bare Linux a present binary is likely already correct — keep it.
-      if [ -f "$bin" ] && [ "$on_wsl" = "no" ]; then
-        echo "  mcp-server present and 'file' unavailable on bare Linux — assuming Linux binary."
-        return 0
-      fi
-      ;;
-  esac
+  if [ "$elf_rc" -eq 2 ]; then
+    # `file` unavailable. On WSL the plugin path almost certainly holds a
+    # Windows .exe (Obsidian is the Windows app), so re-fetch to be safe.
+    # On bare Linux a present binary is likely already correct — keep it.
+    if [ -f "$bin" ] && [ "$on_wsl" = "no" ]; then
+      echo "  mcp-server present and 'file' unavailable on bare Linux — assuming Linux binary."
+      return 0
+    fi
+    # else: WSL + unverifiable → fall through to (re)download
+  fi
+  # elf_rc == 1 (exists but not a Linux ELF) or fell through from WSL+unverifiable → (re)download
 
   echo "  Linux/WSL detected (wsl=$on_wsl) — provisioning Linux mcp-server binary."
-  mkdir -p "$(dirname "$bin")"
+  # Bug 2 fix: non-fatal mkdir — warn + print manual command + return 0 on failure.
+  if ! mkdir -p "$(dirname "$bin")" 2>/dev/null; then
+    echo "  WARNING: cannot create $(dirname "$bin") — skipping Linux mcp-server provisioning."
+    echo "  Manual fix: mkdir -p \"$(dirname "$bin")\" && curl -fsSL $MCP_LINUX_ASSET_URL -o \"$bin\" && chmod +x \"$bin\""
+    return 0
+  fi
   if curl -fsSL "$MCP_LINUX_ASSET_URL" -o "$bin.tmp" 2>/dev/null; then
-    if is_linux_elf "$bin.tmp" || [ "$?" = "2" ]; then
-      mv "$bin.tmp" "$bin"
-      chmod +x "$bin"
+    is_linux_elf "$bin.tmp"; local tmp_elf_rc=$?
+    if [ "$tmp_elf_rc" -eq 0 ] || [ "$tmp_elf_rc" -eq 2 ]; then
+      if ! mv "$bin.tmp" "$bin" 2>/dev/null; then
+        rm -f "$bin.tmp" 2>/dev/null || true
+        echo "  WARNING: could not move downloaded binary into place."
+        echo "  Manual fix: curl -fsSL $MCP_LINUX_ASSET_URL -o \"$bin\" && chmod +x \"$bin\""
+        return 0
+      fi
+      chmod +x "$bin" 2>/dev/null || true
       echo "  Installed Linux mcp-server: $bin"
       return 0
     fi
-    rm -f "$bin.tmp"
+    rm -f "$bin.tmp" 2>/dev/null || true
     echo "  WARNING: downloaded asset is not a Linux ELF binary — leaving existing binary untouched."
   else
     rm -f "$bin.tmp" 2>/dev/null || true
