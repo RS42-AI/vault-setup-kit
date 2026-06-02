@@ -13,6 +13,40 @@ set -euo pipefail
 
 VAULT="${1:-$HOME/Claude/ObsidianVault}"
 
+bun_install_cmd() {
+  # Echo the correct bun install command for the given `uname -s` value.
+  case "$1" in
+    Darwin) echo "brew install oven-sh/bun/bun" ;;
+    *)      echo "curl -fsSL https://bun.sh/install | bash" ;;  # Linux/WSL
+  esac
+}
+
+ensure_bun() {
+  if command -v bun &>/dev/null; then
+    echo "  bun: $(bun --version)"
+    return 0
+  fi
+  local os; os="$(uname -s)"
+  local cmd; cmd="$(bun_install_cmd "$os")"
+  echo "  bun not found — installing via: $cmd"
+  if [ "$os" = "Darwin" ]; then
+    if command -v brew &>/dev/null; then
+      brew install oven-sh/bun/bun
+    else
+      echo "  WARNING: Homebrew missing; install bun manually"
+      return 1
+    fi
+  else
+    curl -fsSL https://bun.sh/install | bash || { echo "  WARNING: bun install failed"; return 1; }
+    export BUN_INSTALL="${BUN_INSTALL:-$HOME/.bun}"
+    export PATH="$BUN_INSTALL/bin:$PATH"
+  fi
+  command -v bun &>/dev/null || [ -x "$HOME/.bun/bin/bun" ]
+}
+
+# Allow tests to source just the function definitions (skip the procedural body).
+[ "${KIT_SOURCE_ONLY:-0}" = "1" ] && return 0 2>/dev/null || true
+
 echo "=== Claude Code MCP Setup ==="
 echo "Vault: $VAULT"
 echo ""
@@ -27,13 +61,11 @@ if ! command -v claude &>/dev/null; then
 fi
 echo "  Claude Code: $(claude --version 2>/dev/null || echo 'installed')"
 
-if ! command -v bun &>/dev/null; then
-  echo "  WARNING: bun not found — QMD installation will be skipped"
-  echo "  Install bun: brew install oven-sh/bun/bun"
-  SKIP_QMD=true
-else
-  echo "  bun: $(bun --version)"
+if ensure_bun; then
   SKIP_QMD=false
+else
+  echo "  WARNING: bun unavailable — QMD installation will be skipped"
+  SKIP_QMD=true
 fi
 
 # --- 2. Register obsidian-mcp-tools ---
