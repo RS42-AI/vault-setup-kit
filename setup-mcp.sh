@@ -21,6 +21,89 @@ bun_install_cmd() {
   esac
 }
 
+# --- R1: WSL2 cross-OS mcp-server binary mismatch ---------------------------
+# The "MCP Tools" Obsidian plugin (jacksteamdev/obsidian-mcp-tools) downloads a
+# mcp-server binary matching the OS that *Obsidian* runs on (it uses
+# os.platform(): win32 -> mcp-server-windows.exe, darwin -> mcp-server-macos-<arch>,
+# else -> mcp-server-linux). On a Windows + WSL2 setup, Obsidian is the *Windows*
+# app, so it drops a Windows .exe at .obsidian/plugins/mcp-tools/bin/mcp-server —
+# but Claude Code runs *inside WSL (Linux)* and needs a *Linux* ELF binary there.
+# Registering the .exe via `claude mcp add` would yield an unrunnable server.
+#
+# Resolution (approach a): the upstream release ships a standalone Linux asset
+# `mcp-server-linux` (verified on release 0.2.33; same naming on /latest), so on
+# Linux/WSL we (re)download that asset over the plugin path and chmod +x it. This
+# is preferred over registering the Windows .exe via WSL interop because it avoids
+# coupling to Windows path layout / interop quirks and gives CC a native binary.
+# Idempotent: skip when an ELF binary is already in place. NON-FATAL: a failed
+# download only WARNs with the manual command, never aborts the setup.
+#   Asset:  mcp-server-linux
+#   URL:    https://github.com/jacksteamdev/obsidian-mcp-tools/releases/latest/download/mcp-server-linux
+# macOS runs are unaffected — this whole path is gated behind Linux/WSL detection.
+MCP_LINUX_ASSET_URL="https://github.com/jacksteamdev/obsidian-mcp-tools/releases/latest/download/mcp-server-linux"
+
+is_wsl() {
+  # WSL kernels report "microsoft" in /proc/version.
+  grep -qi microsoft /proc/version 2>/dev/null
+}
+
+is_linux() {
+  [ "$(uname -s)" = "Linux" ]
+}
+
+# True when the file at $1 is a Linux ELF binary (best-effort: needs `file`).
+is_linux_elf() {
+  local f="$1"
+  [ -f "$f" ] || return 1
+  command -v file &>/dev/null || return 2   # can't tell — caller decides
+  file -b "$f" 2>/dev/null | grep -qi 'ELF'
+}
+
+# On Linux/WSL, ensure $MCP_SERVER_BIN is a runnable Linux binary. If it's missing
+# or is the wrong-arch (Windows) binary the plugin dropped, fetch mcp-server-linux.
+# NON-FATAL by contract: any failure prints a WARNING + manual command, returns 0.
+ensure_linux_mcp_binary() {
+  local bin="$1"
+  is_linux || return 0          # never touch macOS
+  local on_wsl="no"; is_wsl && on_wsl="yes"
+
+  # Decide whether we already have a good Linux binary.
+  if is_linux_elf "$bin"; then
+    echo "  mcp-server is already a Linux ELF binary — leaving it in place."
+    return 0
+  fi
+  case "$?" in
+    2)
+      # `file` unavailable. On WSL the plugin path almost certainly holds a
+      # Windows .exe (Obsidian is the Windows app), so re-fetch to be safe.
+      # On bare Linux a present binary is likely already correct — keep it.
+      if [ -f "$bin" ] && [ "$on_wsl" = "no" ]; then
+        echo "  mcp-server present and 'file' unavailable on bare Linux — assuming Linux binary."
+        return 0
+      fi
+      ;;
+  esac
+
+  echo "  Linux/WSL detected (wsl=$on_wsl) — provisioning Linux mcp-server binary."
+  mkdir -p "$(dirname "$bin")"
+  if curl -fsSL "$MCP_LINUX_ASSET_URL" -o "$bin.tmp" 2>/dev/null; then
+    if is_linux_elf "$bin.tmp" || [ "$?" = "2" ]; then
+      mv "$bin.tmp" "$bin"
+      chmod +x "$bin"
+      echo "  Installed Linux mcp-server: $bin"
+      return 0
+    fi
+    rm -f "$bin.tmp"
+    echo "  WARNING: downloaded asset is not a Linux ELF binary — leaving existing binary untouched."
+  else
+    rm -f "$bin.tmp" 2>/dev/null || true
+    echo "  WARNING: could not download the Linux mcp-server binary."
+  fi
+  echo "  Resolve manually with:"
+  echo "    curl -fsSL $MCP_LINUX_ASSET_URL -o \"$bin\" && chmod +x \"$bin\""
+  return 0
+}
+
 ensure_bun() {
   if command -v bun &>/dev/null; then
     echo "  bun: $(bun --version)"
@@ -76,6 +159,10 @@ echo ""
 echo "[2/4] Registering obsidian-mcp-tools..."
 
 MCP_SERVER_BIN="$VAULT/.obsidian/plugins/mcp-tools/bin/mcp-server"
+
+# R1: under WSL/Linux the plugin may have dropped a Windows .exe here — make sure
+# we have a runnable Linux binary before registering it (no-op on macOS).
+ensure_linux_mcp_binary "$MCP_SERVER_BIN"
 
 if [ ! -f "$MCP_SERVER_BIN" ]; then
   echo "  WARNING: MCP Tools plugin not found at expected path."
