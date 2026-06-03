@@ -93,9 +93,11 @@ Write-Host "------------------------------------------------------------" -Foreg
 $apiKey = Read-Host "Paste the Local REST API key (or press Enter to skip MCP for now)"
 
 # 4.5 — run MCP + Personal OS plugin in WSL, passing the key via env.
-# REST API keys are hex (no quotes/specials), so single-quoting $apiKey inside the
-# bash -lc string is safe. $apiKey and $Distro are PowerShell vars and expand here.
-wsl.exe -d $Distro -- bash -lc "cd ~/vault-setup-kit && OBSIDIAN_API_KEY='$apiKey' bash setup-mcp.sh && bash setup-claude-plugins.sh"
+# Escape single quotes for the single-quoted bash string ('->'\'') so an unexpected
+# character in the key can't break or inject into the command. $apiKey/$Distro are
+# PowerShell vars and expand here.
+$apiKeyEsc = $apiKey.Replace("'", "'\''")
+wsl.exe -d $Distro -- bash -lc "cd ~/vault-setup-kit && OBSIDIAN_API_KEY='$apiKeyEsc' bash setup-mcp.sh && bash setup-claude-plugins.sh"
 if ($LASTEXITCODE -ne 0) { throw "WSL MCP/plugin setup failed (exit $LASTEXITCODE). See errors above." }
 
 # Phase 5 — done; remind the user how to open the vault and run the daily commands.

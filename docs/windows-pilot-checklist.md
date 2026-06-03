@@ -117,6 +117,8 @@ Confirm these four plugins are enabled in Obsidian (Settings → Community plugi
 - [ ] Output reports **ELF** (e.g. "ELF 64-bit LSB executable, x86-64"). Not "PE32" or "MS-DOS".
 
 > If the output says PE32 or MS-DOS executable, the R1 provisioning step did not replace the Windows binary. Record the full `file` output and stop — do not proceed to 6b until this is fixed.
+
+> Edge case: if the Linux binary download failed (offline / GitHub unreachable), `setup-mcp.sh` takes its "MCP Tools plugin not found" branch and the key you pasted is **dropped with only a warning** — MCP won't register. Fix: get the box online, then re-run `OBSIDIAN_API_KEY=<your-key> bash ~/vault-setup-kit/setup-mcp.sh` inside WSL.
 >
 > Notes: _______________________________________________________
 
