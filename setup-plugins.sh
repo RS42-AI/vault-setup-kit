@@ -8,7 +8,7 @@
 #
 # Prerequisites:
 #   - Obsidian vault exists at the target path
-#   - curl available (ships with macOS)
+#   - curl available (ships with macOS; pre-installed on Ubuntu/WSL)
 #
 # Usage: bash setup-plugins.sh [vault_path]
 #   vault_path defaults to ~/Claude/ObsidianVault
@@ -19,12 +19,6 @@ set -euo pipefail
 
 VAULT="${1:-$HOME/Claude/ObsidianVault}"
 PLUGINS_DIR="$VAULT/.obsidian/plugins"
-
-echo "=== Obsidian Plugin Setup ==="
-echo "Vault: $VAULT"
-echo ""
-
-mkdir -p "$PLUGINS_DIR"
 
 # --- Helper: download plugin from GitHub ---
 download_plugin() {
@@ -55,29 +49,11 @@ download_plugin() {
   fi
 }
 
-# --- 1. Install missing plugins ---
-echo "[1/3] Installing plugins..."
-
-# Essential plugins to download if missing (bash 3.2 compatible — no associative arrays)
-download_plugin "terminal" "polyipseity/obsidian-terminal" || true
-download_plugin "obsidian-linter" "platers/obsidian-linter" || true
-download_plugin "templater-obsidian" "SilentVoid13/Templater" || true
-download_plugin "dataview" "blacksmithgu/obsidian-dataview" || true
-download_plugin "obsidian-git" "Vinzent03/obsidian-git" || true
-download_plugin "obsidian-local-rest-api" "coddingtonbear/obsidian-local-rest-api" || true
-download_plugin "mcp-tools" "jacksteamdev/obsidian-mcp-tools" || true
-download_plugin "editing-toolbar" "PKM-er/obsidian-editing-toolbar" || true
-download_plugin "obsidian-excalidraw-plugin" "zsviczian/obsidian-excalidraw-plugin" || true
-download_plugin "smart-connections" "brianpetro/obsidian-smart-connections" || true
-
-echo ""
-
-# --- 2. Write plugin configurations ---
-echo "[2/3] Writing plugin configurations..."
-
-# --- Terminal ---
-echo "  Configuring: Terminal"
-cat > "$PLUGINS_DIR/terminal/data.json" << 'EOF'
+# --- Helper: write terminal plugin config (macOS + Windows/WSL profiles) ---
+write_terminal_config() {
+  local dir="$1"   # .../.obsidian/plugins/terminal
+  mkdir -p "$dir"
+  cat > "$dir/data.json" << 'EOF'
 {
   "addToCommand": true,
   "addToContextMenu": true,
@@ -121,6 +97,19 @@ cat > "$PLUGINS_DIR/terminal/data.json" << 'EOF'
       "type": "integrated",
       "useWin32Conhost": true
     },
+    "win32IntegratedDefault": {
+      "args": [],
+      "executable": "wsl.exe",
+      "followTheme": true,
+      "name": "",
+      "platforms": { "win32": true },
+      "restoreHistory": false,
+      "rightClickAction": "copyPaste",
+      "successExitCodes": ["0", "SIGINT", "SIGTERM"],
+      "terminalOptions": { "documentOverride": null },
+      "type": "integrated",
+      "useWin32Conhost": true
+    },
     "developerConsole": {
       "followTheme": true,
       "name": "",
@@ -135,6 +124,42 @@ cat > "$PLUGINS_DIR/terminal/data.json" << 'EOF'
   "terminalOptions": { "documentOverride": null }
 }
 EOF
+}
+
+# Allow tests to source just the function definitions (skip the procedural body).
+[ "${KIT_SOURCE_ONLY:-0}" = "1" ] && return 0 2>/dev/null || true
+
+echo "=== Obsidian Plugin Setup ==="
+echo "Vault: $VAULT"
+echo ""
+
+mkdir -p "$PLUGINS_DIR"
+
+# --- 1. Install missing plugins ---
+echo "[1/3] Installing plugins..."
+
+# Essential plugins to download if missing (bash 3.2 compatible — no associative arrays)
+download_plugin "terminal" "polyipseity/obsidian-terminal" || true
+download_plugin "obsidian-linter" "platers/obsidian-linter" || true
+download_plugin "templater-obsidian" "SilentVoid13/Templater" || true
+download_plugin "dataview" "blacksmithgu/obsidian-dataview" || true
+download_plugin "obsidian-git" "Vinzent03/obsidian-git" || true
+download_plugin "obsidian-local-rest-api" "coddingtonbear/obsidian-local-rest-api" || true
+download_plugin "mcp-tools" "jacksteamdev/obsidian-mcp-tools" || true
+download_plugin "editing-toolbar" "PKM-er/obsidian-editing-toolbar" || true
+download_plugin "obsidian-excalidraw-plugin" "zsviczian/obsidian-excalidraw-plugin" || true
+download_plugin "smart-connections" "brianpetro/obsidian-smart-connections" || true
+
+echo ""
+
+# --- 2. Write plugin configurations ---
+echo "[2/3] Writing plugin configurations..."
+
+# --- Terminal ---
+echo "  Configuring: Terminal"
+# Terminal: the win32 profile launches the default WSL distro via wsl.exe.
+# If the user's default distro is not Ubuntu, add "-d Ubuntu" to that profile's args.
+write_terminal_config "$PLUGINS_DIR/terminal"
 
 # --- Linter ---
 echo "  Configuring: Linter"

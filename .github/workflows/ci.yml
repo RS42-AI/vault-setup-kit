@@ -20,3 +20,33 @@ jobs:
         run: brew install bats-core
       - name: Run tests
         run: bats test/
+
+  lint-powershell:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: PSScriptAnalyzer
+        shell: pwsh
+        run: |
+          Install-Module PSScriptAnalyzer -Force -Scope CurrentUser
+          $r = Invoke-ScriptAnalyzer -Path setup-windows.ps1 -Severity Error,Warning
+          $r | Format-Table -AutoSize
+          if ($r.Severity -contains 'Error') { exit 1 }
+          # Note: Write-Host warnings are expected and acceptable for a user-facing
+          # bootstrap script — this job fails only on Severity Error, not Warning.
+
+  test-windows:
+    # Runs the existing bats suite under real WSL2 on a windows-latest runner.
+    # If setup-wsl proves flaky in practice, fall back to manual-pilot-only for
+    # WSL coverage and remove this job.
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: Vampire/setup-wsl@v3
+        with:
+          distribution: Ubuntu-24.04
+      - name: Install bats + run tests under WSL
+        shell: wsl-bash {0}
+        run: |
+          sudo apt-get update -y && sudo apt-get install -y bats python3 file
+          bats test/
