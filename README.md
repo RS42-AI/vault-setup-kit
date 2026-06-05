@@ -93,3 +93,7 @@ Then open Claude Code in the vault and run `/update-structure` — it walks you 
 ## Status
 
 Pre-v0.1 — under active development.
+
+## License
+
+Licensed under the [GNU Affero General Public License v3.0](LICENSE) (AGPL-3.0), matching the [AI-OS Lite](https://github.com/RS42-AI/ai-os-lite) plugin it installs.
