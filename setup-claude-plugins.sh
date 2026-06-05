@@ -8,7 +8,7 @@
 #
 # The kit ORCHESTRATES the install from the ai-os-lite repo — it does not
 # vendor the plugin (the two repos stay decoupled). This requires the repo to
-# be published at https://github.com/RandomStateLabs/ai-os-lite
+# be published at https://github.com/RS42-AI/ai-os-lite
 #
 # This step is NON-FATAL: if the CLI is missing or the marketplace can't be
 # reached, it warns and the rest of the vault still works. Re-run this script
@@ -20,7 +20,7 @@ set -uo pipefail   # NOTE: no -e — a plugin failure must not abort the install
 
 VAULT="${1:-$HOME/Claude/ObsidianVault}"
 
-MARKETPLACE="RandomStateLabs/ai-os-lite"
+MARKETPLACE="RS42-AI/ai-os-lite"
 PLUGIN="ai-os-lite@ai-os-lite-marketplace"
 
 echo "=== AI-OS Lite plugin setup ==="
@@ -38,7 +38,7 @@ echo "[1/3] Registering AI-OS Lite marketplace ($MARKETPLACE)..."
 if ! claude plugin marketplace add "$MARKETPLACE"; then
   echo ""
   echo "  WARNING: could not add the marketplace."
-  echo "  Most likely the repo isn't published yet (RandomStateLabs/ai-os-lite)."
+  echo "  Most likely the repo isn't published yet (RS42-AI/ai-os-lite)."
   echo "  Vault setup is otherwise complete — re-run this script once the repo is"
   echo "  public: bash setup-claude-plugins.sh \"$VAULT\""
   exit 0
