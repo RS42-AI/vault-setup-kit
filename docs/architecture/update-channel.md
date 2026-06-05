@@ -2,7 +2,7 @@
 
 How `setup-vault.sh --update` and `/update-structure` cooperate to keep an installed vault in sync with the kit's canonical shape, without forcing reinstalls or clobbering customizations.
 
-If you want the *design rationale* (why prose-driven migrations rather than mechanical overwrites), the spec lives in the founder's vault at `2. Projects/2. RS42/Vault-Setup/Notes/Vault-Setup Kit Update Cycle - Prose-Driven Structure Updates for Continuous Vault Shape Evolution.md`. This doc covers the *operational mental model* — what files go where, what happens when you run things.
+This doc covers the *operational mental model* — what files go where, what happens when you run things.
 
 ## The two delivery moments
 
