@@ -92,6 +92,17 @@ load test_helper
   [[ "$output" == *"edition"* ]]
 }
 
+@test "switching-to-team-edition doc covers both the empty and content routes" {
+  local doc="$KIT_ROOT/docs/switching-to-team-edition.md"
+  [ -f "$doc" ]
+  run grep -q "Route A" "$doc"
+  [ "$status" -eq 0 ]
+  run grep -q "Route B" "$doc"
+  [ "$status" -eq 0 ]
+  run grep -q -- "--edition=team" "$doc"
+  [ "$status" -eq 0 ]
+}
+
 @test "setup.sh parses --edition and forwards it to setup-vault.sh" {
   # Static wiring check: setup.sh must parse the flag and pass it through to the
   # vault step. (A full end-to-end run is impractical — setup.sh installs Obsidian

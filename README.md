@@ -61,6 +61,8 @@ bash setup-vault.sh --edition=team ~/path/to/work-vault
 
 The team edition is how each collaborator gets their own RS42 work vault (their own private git repo), with the shared knowledge commons mounted in later as a submodule.
 
+Already ran the kit on the personal edition and want to switch? See [docs/switching-to-team-edition.md](docs/switching-to-team-edition.md).
+
 ### Windows (via WSL2)
 
 1. Clone or download this repo on your Windows machine.
