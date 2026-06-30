@@ -13,6 +13,18 @@
 
 set -euo pipefail
 
+EDITION="personal"
+POSITIONAL=()
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --edition) EDITION="${2:-}"; shift 2 ;;
+    --edition=*) EDITION="${1#*=}"; shift ;;
+    *) POSITIONAL+=("$1"); shift ;;
+  esac
+done
+# bash 3.2 (macOS): guard empty-array expansion under `set -u`
+if [ ${#POSITIONAL[@]} -gt 0 ]; then set -- "${POSITIONAL[@]}"; else set --; fi
+
 VAULT="${1:-$HOME/Claude/ObsidianVault}"
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
@@ -23,7 +35,7 @@ echo "  Target: $VAULT"
 echo "============================================================"
 echo ""
 
-bash "$SCRIPT_DIR/setup-vault.sh" "$VAULT"
+bash "$SCRIPT_DIR/setup-vault.sh" --edition="$EDITION" "$VAULT"
 echo ""
 
 echo "------------------------------------------------------------"
@@ -57,6 +69,12 @@ bash "$SCRIPT_DIR/setup-claude-plugins.sh" "$VAULT"
 
 echo ""
 echo "============================================================"
-echo "  All done. Open $VAULT/Personal/Vault-Setup/Vault-Setup.md"
-echo "  to start the curriculum."
+if [ "$EDITION" = "team" ]; then
+  echo "  All done. Open"
+  echo "  $VAULT/2. Projects/RS42/RS42-Onboarding/RS42-Onboarding.md"
+  echo "  to start."
+else
+  echo "  All done. Open $VAULT/Personal/Vault-Setup/Vault-Setup.md"
+  echo "  to start the curriculum."
+fi
 echo "============================================================"

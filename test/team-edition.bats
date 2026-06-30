@@ -91,3 +91,13 @@ load test_helper
   [ "$status" -eq 1 ]
   [[ "$output" == *"edition"* ]]
 }
+
+@test "setup.sh parses --edition and forwards it to setup-vault.sh" {
+  # Static wiring check: setup.sh must parse the flag and pass it through to the
+  # vault step. (A full end-to-end run is impractical — setup.sh installs Obsidian
+  # plugins + MCP servers behind interactive pauses.)
+  run grep -qE '\-\-edition=\*\)' "$KIT_ROOT/setup.sh"
+  [ "$status" -eq 0 ]
+  run grep -qE 'setup-vault\.sh" --edition="\$EDITION"' "$KIT_ROOT/setup.sh"
+  [ "$status" -eq 0 ]
+}
