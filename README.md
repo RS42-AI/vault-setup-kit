@@ -51,7 +51,7 @@ You can also run any step individually if you only need to refresh part of the s
 
 ### Editions
 
-By default the kit builds a **personal** vault (a full life+work OS). Pass `--edition=team` to build a **work-only** vault — an RS42 area instead of personal-life areas, the daily loop as work logs, and the personal journal/health/finance machinery stripped out:
+The kit builds one of two editions of the same work core. **personal** (default) — the full life+work OS: the core plus personal-life areas, journaling, goals, and the starter curriculum. **team** — the RS42 work vault: the core plus an RS42 area, work-log daily notes, and team onboarding:
 
 ```bash
 bash setup.sh --edition=team ~/path/to/work-vault
