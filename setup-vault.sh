@@ -122,6 +122,23 @@ done
 echo "  Ensured ${#folders[@]} folders exist"
 
 # --- 2. Copy starter content over the vault ---
+# Personal-only base files that must not ship in a team vault. An overlay can
+# override a base file but cannot remove one — removal needs this list.
+team_base_excludes=(
+  "system-settings/Templates/Journal Entry Template.md"
+  "system-settings/Templates/Evening Journal Template.md"
+)
+
+# is_excluded REL: true when REL (vault-relative path) is excluded for this edition.
+is_excluded() {
+  local rel="$1" ex
+  [ "$EDITION" = "team" ] || return 1
+  for ex in "${team_base_excludes[@]}"; do
+    [ "$rel" = "$ex" ] && return 0
+  done
+  return 1
+}
+
 # copy_tree BASE [SUBPATH]: non-clobber copy of files under BASE/[SUBPATH] into
 # $VAULT, preserving each file's path relative to BASE. Existing files are kept.
 copied_count=0
@@ -132,6 +149,7 @@ copy_tree() {
   local src_file rel dest
   while IFS= read -r -d '' src_file; do
     rel="${src_file#"$base"/}"
+    if is_excluded "$rel"; then continue; fi
     dest="$VAULT/$rel"
     mkdir -p "$(dirname "$dest")"
     if [ -f "$dest" ]; then
@@ -145,10 +163,11 @@ copy_tree() {
 
 echo "[2/4] Copying starter content (edition: $EDITION)..."
 if [ "$EDITION" = "team" ]; then
-  # Team gets the shared system-settings (templates + vault-structure) plus the
-  # self-contained team overlay (its own CLAUDE.md + AGENTS.md + rs42 content).
-  copy_tree "$SRC" "system-settings"
+  # Overlay FIRST: copy_tree never clobbers, so whatever the overlay ships
+  # (its own vault-structure.md, Daily Note Hub template, AGENTS.md, ...)
+  # wins over the shared base copied next.
   copy_tree "$TEAM_OVERLAY"
+  copy_tree "$SRC" "system-settings"
 else
   copy_tree "$SRC"
 fi
