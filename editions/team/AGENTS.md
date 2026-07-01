@@ -17,7 +17,7 @@
 
 Canonical instruction file for this vault — read by any agent (Claude Code, Codex, and whatever comes next). `CLAUDE.md` is a one-line pointer to this file.
 
-This is an **RS42 work vault** — a human-AI operating system for your RS42 work: project work, work logs, research, and the references the whole team shares. It is the *work edition* of the AI-OS system: no personal-life journaling, mood, or health/finance machinery — just work. Frontmatter-driven routing and Obsidian Bases let humans and AI agents both navigate, search, and maintain it.
+This is an **RS42 work vault** — a human-AI operating system for your RS42 work: project work, work logs, research, and the references the whole team shares. It is the *work edition* of the AI-OS system, built on the work core: projects, tasks, dev logs, meetings, references, and a daily work log. Frontmatter-driven routing and Obsidian Bases let humans and AI agents both navigate, search, and maintain it.
 
 **Scope of this file — standing *rules* + non-inferable *curated config* only:**
 - **Structure is derived, never enumerated.** What projects exist comes from globbing the filesystem at runtime. A hand-written project list is a stale index waiting to happen.
@@ -27,9 +27,9 @@ This is an **RS42 work vault** — a human-AI operating system for your RS42 wor
 
 Hub-and-spoke architecture: an **area dashboard** in `3. Areas/` links to **project hubs**, which auto-populate via Obsidian Bases queries on the three routing properties (`type`, `area`, `project`). Top-level folders use numeric prefixes (`1. Daily/`, `2. Projects/`, `3. Areas/`, `4. Contacts/`, `5. Resources/`, `6. Main Notes/`) to keep them in a stable sidebar order; `system-settings/` sits alongside without a prefix.
 
-Daily hubs (`1. Daily/YYYY-MM-DD.md`) are **work logs** — what you worked on, decisions made, blockers — not personal journals. Templates live in `system-settings/Templates/`.
+Daily hubs (`1. Daily/YYYY-MM-DD.md`) are **work logs** — what you worked on, decisions made, blockers. Templates live in `system-settings/Templates/`.
 
-Full folder roles and project-folder layout live in [[vault-structure]] (load-on-demand reference) — consult it when you need the details, not when routing a single note. *(Note: `vault-structure.md` currently describes the full personal edition; ignore its `Personal/`, journal, and personal-area references — this work vault has only the folders listed above.)*
+Full folder roles and project-folder layout live in [[vault-structure]] (load-on-demand reference) — consult it when you need the details, not when routing a single note.
 
 ## Areas
 
