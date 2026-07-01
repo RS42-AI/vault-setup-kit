@@ -1,0 +1,123 @@
+---
+date: <% tp.date.now("YYYY-MM-DD") %>
+type: daily
+tags:
+  - daily
+---
+
+# <% tp.date.now("dddd, MMMM D") %>
+
+> [[1. Daily/<% tp.date.now("YYYY-MM-DD", -1) %>|← Yesterday]] | [[1. Daily/<% tp.date.now("YYYY-MM-DD", 1) %>|Tomorrow →]]
+
+---
+## Focus
+
+**Today's priorities:**
+- [ ] ...
+
+---
+
+## Active Work
+
+```base
+filters:
+  and:
+    - type == "task"
+    - status == "active"
+views:
+  - type: table
+    name: Active Work
+    order:
+      - file.name
+      - project
+      - priority
+    sort:
+      - property: priority
+        direction: ASC
+    filter: path != "system-settings/Templates/Task Note Template"
+    columnSize:
+      file.name: 350
+      note.project: 130
+      note.priority: 80
+```
+
+---
+
+## Today's Meetings
+
+```base
+filters:
+  and:
+    - type == "meeting"
+    - date == "<% tp.date.now("YYYY-MM-DD") %>"
+views:
+  - type: table
+    name: Meetings
+    order:
+      - file.name
+    sort:
+      - property: file.name
+        direction: ASC
+    columnSize:
+      file.name: 500
+```
+
+---
+## Today's Dev Sessions
+
+```base
+filters:
+  and:
+    - type == "devlog"
+    - date == "<% tp.date.now("YYYY-MM-DD") %>"
+views:
+  - type: table
+    name: Dev Sessions
+    order:
+      - file.name
+      - project
+      - session_topic
+    sort:
+      - property: file.name
+        direction: ASC
+    columnSize:
+      file.name: 400
+      note.project: 150
+      note.session_topic: 250
+```
+
+---
+## Notes Created Today
+
+```base
+filters:
+  and:
+    - date == "<% tp.date.now("YYYY-MM-DD") %>"
+    - type != "devlog"
+    - type != "meeting"
+    - type != "daily"
+    - type != "task"
+views:
+  - type: table
+    name: Notes
+    order:
+      - file.name
+      - area
+      - project
+    sort:
+      - property: file.name
+        direction: ASC
+    columnSize:
+      file.name: 400
+      note.area: 120
+      note.project: 120
+```
+
+---
+## Wrap-Up
+
+**Done today:**
+- ...
+
+**Blocked / carrying over:**
+- ...
