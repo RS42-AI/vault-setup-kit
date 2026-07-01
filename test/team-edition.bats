@@ -126,3 +126,43 @@ load test_helper
     fi
   done < <(find "$KIT_ROOT/vault-files" -type f -print0)
 }
+
+@test "generated team vault never references personal-life concepts (artifact guard)" {
+  setup_test_vault
+  run bash "$KIT_ROOT/setup-vault.sh" --edition=team "$TEST_VAULT"
+  [ "$status" -eq 0 ]
+  # Case-insensitive; templates included; .git excluded. Any hit = artifact-rule violation.
+  run grep -ril -e "personal/" -e "journal" -e "personal-life" --exclude-dir=.git "$TEST_VAULT"
+  if [ "$status" -eq 0 ]; then
+    echo "artifact-rule violations found in:"
+    echo "$output"
+    return 1
+  fi
+}
+
+@test "team edition excludes personal-only templates" {
+  setup_test_vault
+  run bash "$KIT_ROOT/setup-vault.sh" --edition=team "$TEST_VAULT"
+  [ "$status" -eq 0 ]
+  [ \! -f "$TEST_VAULT/system-settings/Templates/Journal Entry Template.md" ]
+  [ \! -f "$TEST_VAULT/system-settings/Templates/Evening Journal Template.md" ]
+}
+
+@test "team edition ships the team-native vault-structure.md (overlay wins over base)" {
+  setup_test_vault
+  run bash "$KIT_ROOT/setup-vault.sh" --edition=team "$TEST_VAULT"
+  [ "$status" -eq 0 ]
+  run grep -q "RS42" "$TEST_VAULT/system-settings/vault-structure.md"
+  [ "$status" -eq 0 ]
+}
+
+@test "team edition ships a work-log Daily Note Hub template" {
+  setup_test_vault
+  run bash "$KIT_ROOT/setup-vault.sh" --edition=team "$TEST_VAULT"
+  [ "$status" -eq 0 ]
+  [ -f "$TEST_VAULT/system-settings/Templates/Daily Note Hub Template.md" ]
+  run grep -qi "morning journal" "$TEST_VAULT/system-settings/Templates/Daily Note Hub Template.md"
+  [ "$status" -ne 0 ]
+  run grep -q "Wrap-Up" "$TEST_VAULT/system-settings/Templates/Daily Note Hub Template.md"
+  [ "$status" -eq 0 ]
+}
