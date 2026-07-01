@@ -112,3 +112,17 @@ load test_helper
   run grep -qE 'setup-vault\.sh" --edition="\$EDITION"' "$KIT_ROOT/setup.sh"
   [ "$status" -eq 0 ]
 }
+
+@test "personal edition ships every base file byte-identical (full-diff regression)" {
+  setup_test_vault
+  run bash "$KIT_ROOT/setup-vault.sh" "$TEST_VAULT"
+  [ "$status" -eq 0 ]
+  local f rel
+  while IFS= read -r -d '' f; do
+    rel="${f#"$KIT_ROOT/vault-files/"}"
+    if \! cmp -s "$f" "$TEST_VAULT/$rel"; then
+      echo "base file missing or altered in generated vault: $rel"
+      return 1
+    fi
+  done < <(find "$KIT_ROOT/vault-files" -type f -print0)
+}
