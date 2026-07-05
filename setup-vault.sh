@@ -20,14 +20,28 @@
 set -euo pipefail
 
 UPDATE_MODE=0
-if [ "${1:-}" = "--update" ]; then
-  UPDATE_MODE=1
-  shift
-fi
+EDITION="personal"
+POSITIONAL=()
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --update) UPDATE_MODE=1; shift ;;
+    --edition) EDITION="${2:-}"; shift 2 ;;
+    --edition=*) EDITION="${1#*=}"; shift ;;
+    *) POSITIONAL+=("$1"); shift ;;
+  esac
+done
+# bash 3.2 (macOS): guard empty-array expansion under `set -u`
+if [ ${#POSITIONAL[@]} -gt 0 ]; then set -- "${POSITIONAL[@]}"; else set --; fi
 
 VAULT="${1:-$HOME/Claude/ObsidianVault}"
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 SRC="$SCRIPT_DIR/vault-files"
+TEAM_OVERLAY="$SCRIPT_DIR/editions/team"
+
+if [ "$EDITION" != "personal" ] && [ "$EDITION" != "team" ]; then
+  echo "ERROR: unknown --edition '$EDITION' (expected: personal | team)"
+  exit 1
+fi
 
 if [ ! -d "$SRC" ]; then
   echo "ERROR: vault-files/ not found at $SRC"
@@ -59,9 +73,10 @@ fi
 # --- 1. Create folder structure ---
 echo "[1/4] Creating folder structure..."
 
-# Top-level folders that always exist (some are populated by vault-files,
+# Top-level folders that always exist (some are populated by content files,
 # others are intentionally empty to be filled by the user over time).
-folders=(
+# The set is selected by edition: a personal-life vault vs an RS42 work vault.
+personal_folders=(
   "1. Daily"
   "2. Projects"
   "3. Areas"
@@ -82,32 +97,80 @@ folders=(
   "system-settings/Templates"
   "system-settings/Pasted Images"
 )
+team_folders=(
+  "1. Daily"
+  "2. Projects"
+  "2. Projects/RS42"
+  "3. Areas"
+  "3. Areas/RS42"
+  "3. Areas/RS42/Goals"
+  "4. Contacts"
+  "4. Contacts/People"
+  "4. Contacts/Meetings"
+  "5. Resources"
+  "5. Resources/RS42"
+  "6. Main Notes"
+  "system-settings"
+  "system-settings/Templates"
+  "system-settings/Pasted Images"
+)
+if [ "$EDITION" = "team" ]; then folders=("${team_folders[@]}"); else folders=("${personal_folders[@]}"); fi
 
 for folder in "${folders[@]}"; do
   mkdir -p "$VAULT/$folder"
 done
 echo "  Ensured ${#folders[@]} folders exist"
 
-# --- 2. Copy vault-files over the vault ---
-echo "[2/4] Copying starter content..."
+# --- 2. Copy starter content over the vault ---
+# Personal-only base files that must not ship in a team vault. An overlay can
+# override a base file but cannot remove one — removal needs this list.
+team_base_excludes=(
+  "system-settings/Templates/Journal Entry Template.md"
+  "system-settings/Templates/Evening Journal Template.md"
+)
 
-# cp -Rn: recursive, no-clobber. Existing files are preserved.
-# We use a tar-pipe to handle the recursive merge cleanly across
-# nested directories that may already partially exist in the target.
+# is_excluded REL: true when REL (vault-relative path) is excluded for this edition.
+is_excluded() {
+  local rel="$1" ex
+  [ "$EDITION" = "team" ] || return 1
+  for ex in "${team_base_excludes[@]}"; do
+    [ "$rel" = "$ex" ] && return 0
+  done
+  return 1
+}
+
+# copy_tree BASE [SUBPATH]: non-clobber copy of files under BASE/[SUBPATH] into
+# $VAULT, preserving each file's path relative to BASE. Existing files are kept.
 copied_count=0
-while IFS= read -r -d '' src_file; do
-  rel="${src_file#"$SRC"/}"
-  dest="$VAULT/$rel"
-  dest_dir="$(dirname "$dest")"
-  mkdir -p "$dest_dir"
-  if [ -f "$dest" ]; then
-    : # skip existing files silently
-  else
-    cp "$src_file" "$dest"
-    copied_count=$((copied_count + 1))
-  fi
-done < <(find "$SRC" -type f -print0)
+copy_tree() {
+  local base="$1" sub="${2:-}"
+  local root="$base"
+  [ -n "$sub" ] && root="$base/$sub"
+  local src_file rel dest
+  while IFS= read -r -d '' src_file; do
+    rel="${src_file#"$base"/}"
+    if is_excluded "$rel"; then continue; fi
+    dest="$VAULT/$rel"
+    mkdir -p "$(dirname "$dest")"
+    if [ -f "$dest" ]; then
+      : # skip existing files silently
+    else
+      cp "$src_file" "$dest"
+      copied_count=$((copied_count + 1))
+    fi
+  done < <(find "$root" -type f -print0)
+}
 
+echo "[2/4] Copying starter content (edition: $EDITION)..."
+if [ "$EDITION" = "team" ]; then
+  # Overlay FIRST: copy_tree never clobbers, so whatever the overlay ships
+  # (its own vault-structure.md, Daily Note Hub template, AGENTS.md, ...)
+  # wins over the shared base copied next.
+  copy_tree "$TEAM_OVERLAY"
+  copy_tree "$SRC" "system-settings"
+else
+  copy_tree "$SRC"
+fi
 echo "  Copied $copied_count new files (existing files left alone)"
 
 # --- 3. Place CLAUDE.md ---
@@ -153,5 +216,9 @@ else
   echo "  1. Open Obsidian and point it at: $VAULT"
   echo "  2. Run setup-plugins.sh to install community plugins"
   echo "  3. Run setup-mcp.sh to register MCP servers with Claude Code"
-  echo "  4. Open Personal/Vault-Setup/Vault-Setup.md and start the curriculum"
+  if [ "$EDITION" = "team" ]; then
+    echo "  4. Open '2. Projects/RS42/RS42-Onboarding/RS42-Onboarding.md' and start there"
+  else
+    echo "  4. Open Personal/Vault-Setup/Vault-Setup.md and start the curriculum"
+  fi
 fi

@@ -49,6 +49,20 @@ The kit runs three steps in order:
 
 You can also run any step individually if you only need to refresh part of the setup. All scripts are **idempotent** — re-running won't overwrite existing files.
 
+### Editions
+
+The kit builds one of two editions of the same work core. **personal** (default) — the full life+work OS: the core plus personal-life areas, journaling, goals, and the starter curriculum. **team** — the RS42 work vault: the core plus an RS42 area, work-log daily notes, and team onboarding:
+
+```bash
+bash setup.sh --edition=team ~/path/to/work-vault
+# or just the vault step:
+bash setup-vault.sh --edition=team ~/path/to/work-vault
+```
+
+The team edition is how each collaborator gets their own RS42 work vault (their own private git repo), with the shared knowledge commons mounted in later as a submodule.
+
+Already ran the kit on the personal edition and want to switch? See [docs/switching-to-team-edition.md](docs/switching-to-team-edition.md).
+
 ### Windows (via WSL2)
 
 1. Clone or download this repo on your Windows machine.
