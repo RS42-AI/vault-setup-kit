@@ -120,7 +120,7 @@ load test_helper
   local f rel
   while IFS= read -r -d '' f; do
     rel="${f#"$KIT_ROOT/vault-files/"}"
-    if \! cmp -s "$f" "$TEST_VAULT/$rel"; then
+    if ! cmp -s "$f" "$TEST_VAULT/$rel"; then
       echo "base file missing or altered in generated vault: $rel"
       return 1
     fi
