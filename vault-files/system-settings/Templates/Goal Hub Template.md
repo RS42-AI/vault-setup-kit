@@ -9,41 +9,65 @@ tags:
   - goal
 ---
 
-# {Area} — {Horizon} Goal
+# {Goal Name}
 
 > **Area**: [[]]
+> **Sibling goals**: [[]]
+> **Hierarchy**: goal → project → task
 
 ## Objective
 
-{One-sentence outcome statement. What is the desired state at the end of the horizon?}
+**{One-sentence outcome statement — the desired state at the end of the horizon, framed as an identity/position shift where possible.}**
 
 ## Key Results
 
-- **KR1** — {measurable outcome that proves the Objective is being met}
-- **KR2** — {measurable outcome}
-- **KR3** — {measurable outcome}
+- **KR1 — {name}**: {measurable outcome that proves the Objective is being met}
+- **KR2 — {name}**: {measurable outcome}
+- **KR3 — {name}**: {measurable outcome}
 
-## Linked Projects
+## Why this Objective and not another
+
+{What makes this the load-bearing goal — what alternatives were considered, and why this one wins}
+
+## Why these KRs
+
+{Per KR: why this measure and this number prove the Objective, vs. other measures}
+
+## What's intentionally NOT in this goal
+
+{Explicit exclusions — nearby work that does NOT count toward this goal}
+
+## Linked Projects — How Each Contributes
+
+| Project | Role | Notes |
+|---|---|---|
+| [[]] | {primary / platform / secondary} | |
+
+### Auto-rendered project list
 
 ```base
 filters:
   and:
     - type == "project"
     - area == "{{VALUE:area slug}}"
-    - status == "active"
+    - goal.contains("{{VALUE:goal note name}}")
 views:
   - type: table
-    name: Active Projects
+    name: Projects linked to this goal
     order:
       - file.name
       - status
-      - date
+      - project
     sort:
-      - property: date
-        direction: DESC
+      - property: file.name
+        direction: ASC
 ```
 
+> Set `goal: "[[{goal note name}]]"` on each project hub frontmatter to wire it up.
+
 ## Open Tasks (Cross-Project, This Area)
+
+*(Optional live view — most useful on the current-quarter goal. Delete if not needed.)*
 
 ```base
 filters:
@@ -69,6 +93,8 @@ views:
 
 ## Recent Dev Logs
 
+*(Optional live view — delete if not needed.)*
+
 ```base
 filters:
   and:
@@ -89,28 +115,36 @@ views:
         direction: DESC
 ```
 
-## Why this Goal exists
+## Quarterly checkpoints
 
-{Context: what's driving this Objective? What constraint or opportunity is it responding to?}
+*(Annual goals: one `###` per quarter, written at quarter boundaries. Quarterly goals: use mid-quarter checkpoints.)*
 
-## Why these KRs (not other ones)
+### Q1 (Jan–Mar)
 
-- **KR1** — {why this measure proves the objective}
-- **KR2** — {why this measure}
-- **KR3** — {why this measure}
+### Q2 (Apr–Jun)
+
+### Q3 (Jul–Sep)
+
+### Q4 (Oct–Dec)
 
 ## Open
 
 - {Outstanding decisions, dependencies, or known unknowns}
 
+## Related
+
+- [[]] — area dashboard
+
 ---
 
 ## Frontmatter reference
 
+*(Template documentation — delete this section from real goal notes.)*
+
 | Field | Values |
 |---|---|
 | `type` | `goal` (locked) |
-| `status` | `active` \| `complete` \| `missed` |
-| `area` | One of the slugs from the Areas table in `AGENTS.md` (baseline ships only `personal`) |
+| `status` | `active` \| `done` (achieved) \| `passed` (horizon expired, not fully achieved) \| `archived` — `done`/`passed` are human-only stamps |
+| `area` | your area slugs — see the Areas table in AGENTS.md |
 | `period` | `quarterly` \| `annual` \| `multi-year` |
 | `horizon` | The actual time window — `2026-Q2`, `2026-Annual`, `2026-2028`, etc. |

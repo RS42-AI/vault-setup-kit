@@ -37,7 +37,6 @@ views:
     sort:
       - property: priority
         direction: ASC
-    filter: path != "system-settings/Templates/Task Note Template"
     columnSize:
       file.name: 350
       note.project: 130
@@ -92,6 +91,7 @@ views:
 ---
 ## Notes Created Today
 
+%% To exclude an area from this view, add a line: - area != "<slug>" %%
 ```base
 filters:
   and:
