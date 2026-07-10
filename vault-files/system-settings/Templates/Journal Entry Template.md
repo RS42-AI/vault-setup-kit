@@ -10,12 +10,23 @@ habit_gratitude: false
 habit_vitamins: false
 ---
 
-# [[1. Daily/<% tp.date.now("YYYY-MM-DD") %>|<% tp.date.now("YYYY-MM-DD") %>]]
+# Daily Hub: [[1. Daily/<% tp.date.now("YYYY-MM-DD") %>|<% tp.date.now("YYYY-MM-DD") %>]]
 
-## Recent Accomplishments
+### Overall Read
 *(filled by /start-day)*
 
-### Last Night's Reflection
+### Movement From Yesterday +/- 1
+*(filled by /start-day)*
+
+---
+
+### Control Queue
+*(filled by /start-day)*
+
+### Threads To Keep Visible
+*(filled by /start-day)*
+
+#### At Risk
 *(filled by /start-day)*
 
 ---

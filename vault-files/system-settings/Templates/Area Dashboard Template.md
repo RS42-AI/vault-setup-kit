@@ -7,6 +7,14 @@ tags:
   - area
 ---
 
+# {{title}} Dashboard
+
+#### AI Summary:
+
+<!-- area-sync: pending first run -->
+
+_Not yet generated — run `/area-sync <area>` to populate the area pulse._
+
 > [!note] Area Purpose
 > **Standard to Maintain**: {Describe the ongoing standard or responsibility this area represents}
 
@@ -82,9 +90,7 @@ filters:
   and:
     - type == "task"
     - area == "{{VALUE:area slug}}"
-    - or:
-        - status == "todo"
-        - status == "active"
+    - status == "todo" OR status == "active"
 views:
   - type: table
     name: Active Tasks
@@ -181,6 +187,12 @@ views:
       - property: date
         direction: DESC
 ```
+
+---
+
+## Journal
+
+*(Optional — used by the personal-area dashboard for journal views; delete elsewhere.)*
 
 ---
 
