@@ -4,6 +4,7 @@ type: project
 status: active
 area: personal
 project: vault-setup
+goal_status: unscored
 tags:
   - onboarding
   - vault
