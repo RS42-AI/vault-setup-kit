@@ -190,9 +190,9 @@ views:
 
 ---
 
-## Journal
+## Reflections
 
-*(Optional — used by the personal-area dashboard for journal views; delete elsewhere.)*
+*(Optional — used by area dashboards that track reflective/diary-style entries; delete elsewhere.)*
 
 ---
 
