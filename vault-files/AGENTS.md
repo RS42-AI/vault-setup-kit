@@ -56,6 +56,7 @@ When creating a note, walk these in order:
 4. Person or meeting note → `4. Contacts/People/` or `4. Contacts/Meetings/`
 5. Fleeting thought or observation → `6. Main Notes/` (`type: thought`)
 6. Business idea or brainstorm → `6. Main Notes/` (`type: idea`)
+6b. Design spec for an active project → `{Project}/Specs/` (`type: spec`, set `area:` + `project:`, default `status: draft`)
 7. Curated reference material → `5. Resources/{Area}/`
 8. General technical knowledge → `6. Main Notes/`
 9. Not sure → ask the user
@@ -75,7 +76,12 @@ This procedure applies to **every** note you create — both slash-command outpu
 
 Three properties route every note: **`type`** (what kind), **`area`** (which life area — the slugs in the Areas table), **`project`** (which project — optional; derived from the filesystem, never enumerated — the project tree *is* the list).
 
-### `type` values
+### `type` values — CLOSED LIST
+
+These are the **only** allowed `type:` values. If a note does not obviously fit
+one of these, it is `note` — never invent a new type. Do **not** create `guide`,
+`architecture`, `workflow`, `combined`, or anything else; a note's *character*
+belongs in `tags:`, not in `type:`.
 
 | Value | Description | Where it lives |
 |-------|------------|----------------|
@@ -84,6 +90,7 @@ Three properties route every note: **`type`** (what kind), **`area`** (which lif
 | `idea` | Fleeting business idea | `6. Main Notes/` |
 | `goal` | Quarterly/annual area outcome (Objective + KRs) | `3. Areas/{Area}/Goals/` |
 | `project` | Project hub with embedded Bases | `2. Projects/{Area}/{Project}/` or `Personal/{Project}/` |
+| `spec` | Design document for project work | `{Project}/Specs/` |
 | `task` | Actionable work item | `*/Tasks/` |
 | `meeting` | Meeting note | `4. Contacts/Meetings/` |
 | `person` | Contact note | `4. Contacts/People/` |
@@ -94,6 +101,49 @@ Three properties route every note: **`type`** (what kind), **`area`** (which lif
 | `area-dashboard` | Per-area dashboard hub | `3. Areas/{Area}/` or `Personal/` |
 
 **Frontmatter shapes — read the template.** Field shapes per `type` are defined by the templates in `system-settings/Templates/`, not restated here — re-typing field lists is how they drift. When creating a note, read the matching template. Every template carries `date` + the routing properties; `status`, `tags`, and type-specific fields vary by template.
+
+### `status` values — CLOSED LIST (per type)
+
+`status` is a closed enum **scoped by `type`** — pick only from the row for the
+note's type. Any value not in the row is forbidden; map it to the nearest
+allowed one (never write `in-progress`, `complete`, `planned`, `shipped`,
+`backlog`, `pending`…).
+
+| `type` | allowed `status` (progression →) | pause / terminal |
+|--------|-----------------------------------|------------------|
+| `task` | `todo` → `active` → `done` | `on-hold`, `archived` |
+| `spec`, `project` | `draft` → `in-review` → `active` → `done` | `on-hold`, `superseded`, `archived` |
+| `goal` | `active` → `done` (achieved) *or* `passed` (horizon expired, not fully achieved) | `archived` |
+| `area-dashboard` | `active` → `done` | `archived` |
+| `note`, `idea`, `thought` | `capture` → `done` | `superseded` |
+| `devlog`, `meeting` | `capture` | — |
+| `daily`, `journal`, `person`, `resource` | *(no `status` field)* | — |
+
+**🔒 `done` is human-only.** An AI agent may write any status *except* `done`
+(and `passed`, for goals) — marking something finished is a human decision.
+
+**`note` → `resource` on completion.** A `note` that reaches `done` is a curated
+keeper — promote it to `type: resource` in `5. Resources/{Area}/`. A `resource`
+carries no lifecycle `status`. (This promotion, like any `done`, is human-only.)
+
+### Goal Rollup Contract
+
+The vault should be able to prove goal movement from evidence, not vibes. The
+canonical chain: `devlog.tasks[] → task (area, project, status) → project hub
+(goal, optional quarter_goal/kr) → goal note (objective, KRs)`.
+
+Every `type: project`, `status: active` hub must be scoreable or intentionally
+unscored:
+
+1. **Goal-aligned** — `goal: "[[Goal Note]]"` points to the area goal it serves.
+2. **Exploratory** — `goal_status: discovery`: visible, not counted as progress yet.
+3. **Intentionally unscored** — `goal_status: unscored`: active operational
+   pressure that should appear in reviews without pretending to move a goal.
+4. **Inactive** — `status: on-hold` / `superseded` / `archived` / `done` removes
+   weekly active pressure.
+
+Allowed `goal_status` values are `scored`, `discovery`, and `unscored`. An
+active project with empty `goal:` and no `goal_status:` is drift.
 
 ## Devlog Task Linking
 
