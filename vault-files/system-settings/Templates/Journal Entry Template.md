@@ -4,11 +4,11 @@ type: journal
 journal_type: morning
 tags:
   - journal
-habit_workout: false
-habit_meditation: false
-habit_gratitude: false
-habit_vitamins: false
+habit_journaled: false
+habit_exercise: false
 ---
+
+%% Habits are yours to define. Add or rename `habit_*` properties above — the AI skills read whatever `habit_*` fields the entry carries (the template owns the schema; no fixed set is assumed). The two above are neutral starters. %%
 
 # Daily Hub: [[1. Daily/<% tp.date.now("YYYY-MM-DD") %>|<% tp.date.now("YYYY-MM-DD") %>]]
 

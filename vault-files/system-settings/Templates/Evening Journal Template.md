@@ -4,13 +4,13 @@ type: journal
 journal_type: evening
 tags:
   - journal
-habit_evening_meditation: false
 habit_journaled: false
 ---
 
 ## Evening Habits
-- [ ] Evening meditation
 - [ ] Journaled
+
+%% Add your own evening habits: one checkbox line here plus a matching `habit_*` property in the frontmatter above. The skills parse every checkbox in this section — no fixed set is assumed. %%
 
 ## Context
 *(filled by /prep-evening — today's accomplishments, highlights, suggestions)*
