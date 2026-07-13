@@ -19,7 +19,7 @@
 
 Canonical instruction file for this vault — read by any agent (Claude Code, Codex, and whatever comes next). `CLAUDE.md` is a one-line pointer to this file.
 
-This vault is a knowledge-and-execution system designed for human-AI collaboration: reference notes, project work, a scheduled Morning Brief, and an optional Evening Entry. Frontmatter-driven routing and Obsidian Bases let humans and AI agents both navigate, search, and maintain it.
+This vault is a knowledge-and-execution system designed for human-AI collaboration: reference notes, project work, an executive Morning Brief, and an optional Evening Entry. Frontmatter-driven routing and Obsidian Bases let humans and AI agents both navigate, search, and maintain it.
 
 **Scope of this file — standing *rules* + non-inferable *curated config* only:**
 - **Structure is derived, never enumerated.** What projects and (eventually) areas exist comes from globbing the filesystem at runtime. A hand-written project list is a stale index waiting to happen.

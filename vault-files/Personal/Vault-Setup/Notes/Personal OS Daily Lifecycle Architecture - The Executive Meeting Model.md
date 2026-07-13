@@ -20,7 +20,9 @@ The system prepares two daily touchpoints:
 - **Morning Brief** — the executive briefs you on yesterday's movement, today's commitments, risks, and next decisions. You can optionally add spoken or written thoughts and have the agent turn them into outcomes.
 - **Evening Entry** — the executive reviews today's accomplishments and tomorrow's shape. If reflection would help, you can add it in your own words and ask the agent to process it.
 
-The executive does the preparation on schedule. The Morning Brief remains useful even if you never add a personal entry, and the Evening Entry is explicitly optional. When you do contribute, you bring the part only a human can bring: judgment, context, and decisions about what matters.
+> **Scheduling is optional.** The Setup Kit installs these commands for manual use; it does not install a scheduler. An external scheduler can invoke `/start-day` and `/prep-evening` later without changing the workflow.
+
+The executive does the preparation when invoked—manually or by an optional scheduler. The Morning Brief remains useful even if you never add a personal entry, and the Evening Entry is explicitly optional. When you do contribute, you bring the part only a human can bring: judgment, context, and decisions about what matters.
 
 ---
 

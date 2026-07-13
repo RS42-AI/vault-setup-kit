@@ -5,7 +5,7 @@ Bootstrap kit that takes a fresh macOS or Windows (via WSL2) device to a working
 ## What it ships
 
 - A working Obsidian vault with hub-and-spoke folder structure, frontmatter routing, and 14 templates
-- A scheduled executive Morning Brief plus an optional, neutral Evening Entry—useful without requiring journaling or personal habit disclosure
+- An executive Morning Brief plus an optional, neutral Evening Entry—manual by default and safe to invoke from an external scheduler
 - A starter `Personal/Vault-Setup/` project with a 9-note curriculum on AI-native architecture, multi-agent systems, and the human-AI collaboration model behind the vault
 - A generic `CLAUDE.md` that teaches AI assistants the conventions of this vault
 - Bash scripts to install Obsidian community plugins (Templater, Dataview, Local REST API, MCP Tools, etc.)
@@ -50,6 +50,8 @@ The kit runs four steps in order:
 4. **setup-claude-plugins.sh** — installs the AI-OS Lite daily workflow skills
 
 You can also run any step individually if you only need to refresh part of the setup. All scripts are **idempotent** — re-running won't overwrite existing files.
+
+The daily skills are installed for manual use. The kit does not install a scheduler; `/start-day` and `/prep-evening` can be wired to one later without changing their behavior.
 
 ### Generalized default
 
