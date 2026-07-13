@@ -1,7 +1,6 @@
 ---
 date: 2026-02-22
 type: resource
-status: develop
 area: personal
 project: vault-setup
 tags:
@@ -603,6 +602,6 @@ Four design patterns for production systems:
 ## Related Notes
 
 - [[Multi-Agent Architecture Patterns]] — Orchestration patterns (sequential, concurrent, group chat, handoff, magentic)
-- [[Agentic Department Architecture Patterns]] — Reusable framework for organizing the agents this research describes into departments
+- [[Agentic Department Architecture Patterns - Reusable Framework for AI-Native Operations]] — Reusable framework for organizing the agents this research describes into departments
 - [[AI-Native Architecture - Business Logic as Agent Instructions]] — Where the rules each of these agents follows actually live
 - [[Overview of AI Agent Systems and Their Fundamental Overlap]] — How the frameworks surveyed here relate to MCP and orchestration layers

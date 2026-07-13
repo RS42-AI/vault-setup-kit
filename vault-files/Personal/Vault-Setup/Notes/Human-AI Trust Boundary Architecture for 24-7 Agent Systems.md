@@ -1,7 +1,7 @@
 ---
 date: 2025-12-11
 type: note
-status: develop
+status: capture
 area: personal
 project: vault-setup
 tags:
@@ -290,5 +290,5 @@ There is NO single "God" source of truth — it depends on the PHASE:
 
 - [[AI-Native Architecture - Business Logic as Agent Instructions]] — How permission callbacks and schemas enforce these rules in code
 - [[Multi-Agent Architecture Patterns]] — Splitting work across specialist agents while preserving the trust boundary
-- [[Agentic Department Architecture Patterns]] — Org-level shape of human-in-the-loop systems
+- [[Agentic Department Architecture Patterns - Reusable Framework for AI-Native Operations]] — Org-level shape of human-in-the-loop systems
 - [[Closed-Loop Systems - Feedback Property and Trigger Independence]] — Why "the agent reviews its own state" is the foundation that lets humans review asynchronously

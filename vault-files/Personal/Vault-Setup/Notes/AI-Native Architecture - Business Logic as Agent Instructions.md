@@ -1,7 +1,7 @@
 ---
 date: 2025-12-15
 type: note
-status: develop
+status: capture
 area: personal
 project: vault-setup
 tags:
@@ -244,7 +244,7 @@ The architectural shift this note names is not "we replaced code with prompts." 
 
 - [[Human-AI Trust Boundary Architecture for 24-7 Agent Systems]] — Where in this architecture humans must remain in the loop
 - [[Multi-Agent Architecture Patterns]] — When ONE agent isn't enough and how to split it
-- [[Agentic Department Architecture Patterns]] — Applying these ideas at the org/department level
+- [[Agentic Department Architecture Patterns - Reusable Framework for AI-Native Operations]] — Applying these ideas at the org/department level
 - [[Closed-Loop Systems - Feedback Property and Trigger Independence]] — How agent-driven business logic stays coherent across iterations
 
 ---

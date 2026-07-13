@@ -1,7 +1,7 @@
 ---
 date: 2025-10-20
 type: note
-status: develop
+status: capture
 area: personal
 project: vault-setup
 tags:
@@ -293,6 +293,6 @@ The fundamental overlap is that **all these systems work together to enable AI a
 ## Related Notes
 
 - [[Multi-Agent Architecture Patterns]] — Once you have these primitives, how do you compose them?
-- [[Agentic Department Architecture Patterns]] — Department-shaped composition for AI-native operations
+- [[Agentic Department Architecture Patterns - Reusable Framework for AI-Native Operations]] — Department-shaped composition for AI-native operations
 - [[AI-Native Architecture - Business Logic as Agent Instructions]] — Where the rules an agent follows actually live in this stack
 - [[Agentic Thinking]] — The mental model that ties these layers together

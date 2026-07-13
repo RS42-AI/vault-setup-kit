@@ -1,7 +1,7 @@
 ---
 date: 2026-05-07
 type: note
-status: develop
+status: capture
 area: personal
 project: vault-setup
 tags:

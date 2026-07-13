@@ -1,7 +1,7 @@
 ---
 date: 2024-12-24
 type: note
-status: develop
+status: capture
 area: personal
 project: vault-setup
 tags:
@@ -337,7 +337,7 @@ In an agent-centric architecture, skills can still serve purposes:
 
 - [[AI-Native Architecture - Business Logic as Agent Instructions]] — Where the rules each agent follows are encoded
 - [[Human-AI Trust Boundary Architecture for 24-7 Agent Systems]] — Trust boundaries between orchestrator, workers, and humans
-- [[Agentic Department Architecture Patterns]] — Multi-agent patterns scaled to org/department-shaped systems
+- [[Agentic Department Architecture Patterns - Reusable Framework for AI-Native Operations]] — Multi-agent patterns scaled to org/department-shaped systems
 - [[Overview of AI Agent Systems and Their Fundamental Overlap]] — Why these patterns recur across personal, professional, and product agent systems
 
 ---

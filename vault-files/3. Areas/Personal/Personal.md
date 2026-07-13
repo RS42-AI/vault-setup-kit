@@ -8,26 +8,31 @@ tags:
   - personal
 ---
 
+# Personal Dashboard
+
+#### AI Summary:
+
+<!-- area-sync: pending first run -->
+
+_Not yet generated — run `/area-sync personal` to populate the area pulse._
+
 > [!note] Area Purpose
 > Your personal life — planning, health, life projects, and optional reflection.
 
-This is a dashboard. It auto-populates from frontmatter properties on every other note. As you create notes with `area: personal`, they appear in the right section below.
-
-To start using your vault, see [[Vault-Setup]] — the orientation project.
+This dashboard auto-populates from the `area: personal` field on other notes. To start using the vault, open [[Vault-Setup]].
 
 ---
 
-## Active Projects
+## Ideas
 
 ```base
 filters:
   and:
-    - type == "project"
+    - type == "idea"
     - area == "personal"
-    - status == "active"
 views:
   - type: table
-    name: Active Projects
+    name: Personal Ideas
     order:
       - file.name
       - status
@@ -35,10 +40,6 @@ views:
     sort:
       - property: date
         direction: DESC
-    columnSize:
-      file.name: 300
-      note.status: 100
-      note.date: 120
 ```
 
 ---
@@ -61,42 +62,58 @@ views:
     sort:
       - property: status
         direction: ASC
-    columnSize:
-      file.name: 350
-      note.status: 100
-      note.horizon: 120
 ```
 
 Goals live at `3. Areas/Personal/Goals/{horizon}.md`.
 
 ---
 
-## Recent Devlogs
+## Projects
 
 ```base
 filters:
   and:
-    - type == "devlog"
+    - type == "project"
     - area == "personal"
 views:
   - type: table
-    name: Recent Devlogs
+    name: Personal Projects
     order:
-      - date
       - file.name
-      - session_topic
+      - status
+      - date
     sort:
-      - property: date
-        direction: DESC
-    columnSize:
-      note.date: 120
-      file.name: 350
-      note.session_topic: 250
+      - property: status
+        direction: ASC
 ```
 
 ---
 
-## Knowledge Notes
+## Active Tasks
+
+```base
+filters:
+  and:
+    - type == "task"
+    - area == "personal"
+    - status == "todo" OR status == "active"
+views:
+  - type: table
+    name: Personal Tasks
+    order:
+      - file.name
+      - status
+      - priority
+      - due_date
+    sort:
+      - property: priority
+        direction: ASC
+    filter: path != "system-settings/Templates/Task Note Template"
+```
+
+---
+
+## Notes
 
 ```base
 filters:
@@ -106,31 +123,6 @@ filters:
 views:
   - type: table
     name: Personal Notes
-    order:
-      - file.name
-      - status
-      - date
-    sort:
-      - property: date
-        direction: DESC
-    columnSize:
-      file.name: 400
-      note.status: 100
-      note.date: 120
-```
-
----
-
-## Ideas
-
-```base
-filters:
-  and:
-    - type == "idea"
-    - area == "personal"
-views:
-  - type: table
-    name: Personal Ideas
     order:
       - file.name
       - status
@@ -162,7 +154,33 @@ views:
 
 ---
 
-## Journal
+## Dev Logs
 
-> Morning and evening reflections.
-> Location: `5. Resources/Personal/Journal/`
+```base
+filters:
+  and:
+    - type == "devlog"
+    - area == "personal"
+views:
+  - type: table
+    name: Personal Dev Logs
+    order:
+      - date
+      - file.name
+      - session_topic
+    sort:
+      - property: date
+        direction: DESC
+```
+
+---
+
+## Reflections
+
+Morning Briefs and optional Evening Entries live in `5. Resources/Personal/Journal/`. Reflection is available, neutral, and never required.
+
+---
+
+## Related Areas
+
+- Add links here when you create another area that overlaps with personal planning.

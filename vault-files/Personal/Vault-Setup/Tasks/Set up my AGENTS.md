@@ -20,6 +20,8 @@ tags:
 
 # Set up my AGENTS.md
 
+> This task customizes the generic baseline; it does not expose private information unless you add it yourself.
+
 ## Why
 
 `AGENTS.md` at the vault root is the **AI's instruction manual for your vault**. Every AI session in the vault — Claude Code, Codex, anything that follows the agent-instructions convention — reads it before doing anything. It tells the AI:
