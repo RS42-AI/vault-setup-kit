@@ -10,9 +10,9 @@ tags:
 > [[1. Daily/<% tp.date.now("YYYY-MM-DD", -1) %>|← Yesterday]] | [[1. Daily/<% tp.date.now("YYYY-MM-DD", 1) %>|Tomorrow →]]
 
 ---
-## Morning Journal
+## Morning Brief
 
-> [[5. Resources/Personal/Journal/Morning Entries/<% tp.date.now("YYYY-MM-DD") %>|Open Morning Entry]]
+> [[5. Resources/Personal/Journal/Morning Entries/<% tp.date.now("YYYY-MM-DD") %>|Open Morning Brief]]
 
 
 **Today's priorities:**
@@ -118,6 +118,6 @@ views:
 ```
 
 ---
-## Evening Reflection
+## Evening
 
 > [[5. Resources/Personal/Journal/Evening Entries/<% tp.date.now("YYYY-MM-DD") %>|Open Evening Entry]]

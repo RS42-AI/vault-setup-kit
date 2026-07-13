@@ -63,7 +63,7 @@ Read these in order. They take ~5–10 minutes each. Together they give you the 
 ### 3. Where It Lives — The Vault as OS
 
 - [[AI Workstation Organization - Filesystem and Vault Mapping Architecture]] — why hub-and-spoke works for AI, and how the filesystem layout matches it.
-- [[Personal OS Daily Lifecycle Architecture - The Executive Meeting Model]] — a worked example of the full daily loop: morning prep, journal, work, evening reflection.
+- [[Personal OS Daily Lifecycle Architecture - The Executive Meeting Model]] — a worked example of the full daily loop: scheduled Morning Brief, work, and optional Evening Entry.
 
 ### 4. The Implementation Patterns
 

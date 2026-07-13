@@ -145,13 +145,13 @@ Confirm these four plugins are enabled in Obsidian (Settings → Community plugi
 
 ---
 
-## Phase 7 — Personal OS command [REQUIRED]
+## Phase 7 — AI-OS command [REQUIRED]
 
 - [ ] Inside WSL, open Claude Code in the vault:
   ```
   cd ~/Claude/ObsidianVault && claude
   ```
-- [ ] Run `/start-day` (or another daily Personal OS command) and confirm it executes — it produces output, not an "unknown command" error.
+- [ ] Run `/start-day` (or another daily AI-OS command) and confirm it executes — it produces output, not an "unknown command" error.
 
 ---
 

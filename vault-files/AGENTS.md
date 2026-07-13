@@ -19,7 +19,7 @@
 
 Canonical instruction file for this vault — read by any agent (Claude Code, Codex, and whatever comes next). `CLAUDE.md` is a one-line pointer to this file.
 
-This vault is a personal knowledge-management system designed for human-AI collaboration: reference notes, project work, daily journaling. Frontmatter-driven routing and Obsidian Bases let humans and AI agents both navigate, search, and maintain it.
+This vault is a knowledge-and-execution system designed for human-AI collaboration: reference notes, project work, a scheduled Morning Brief, and an optional Evening Entry. Frontmatter-driven routing and Obsidian Bases let humans and AI agents both navigate, search, and maintain it.
 
 **Scope of this file — standing *rules* + non-inferable *curated config* only:**
 - **Structure is derived, never enumerated.** What projects and (eventually) areas exist comes from globbing the filesystem at runtime. A hand-written project list is a stale index waiting to happen.
@@ -29,7 +29,7 @@ This vault is a personal knowledge-management system designed for human-AI colla
 
 Hub-and-spoke architecture: an **area dashboard** in `3. Areas/` (or `Personal/` for personal life) links to **project hubs**, which auto-populate via Obsidian Bases queries on the three routing properties (`type`, `area`, `project`). Top-level folders use numeric prefixes (`1. Daily/`, `2. Projects/`, `3. Areas/`, `4. Contacts/`, `5. Resources/`, `6. Main Notes/`) to keep them in a stable order in the sidebar; `Personal/` and `system-settings/` sit alongside without a prefix.
 
-Daily hubs live at `1. Daily/YYYY-MM-DD.md`. Journal entries live under `5. Resources/{Area}/Journal/`. Templates live in `system-settings/Templates/`.
+Daily hubs live at `1. Daily/YYYY-MM-DD.md`. Morning Brief and Evening Entry records live under the legacy-compatible `5. Resources/{Area}/Journal/` path. Templates live in `system-settings/Templates/`.
 
 Full folder roles, project-folder layout, and the daily/journal paths live in [[vault-structure]] (load-on-demand reference) — consult it when you need the details, not when routing a single note.
 
@@ -97,7 +97,7 @@ belongs in `tags:`, not in `type:`.
 | `devlog` | Session work log | `{Project}/Dev Log/` |
 | `thought` | Fleeting observation | `6. Main Notes/` |
 | `daily` | Daily note hub | `1. Daily/` |
-| `journal` | Journal entry | `5. Resources/{Area}/Journal/` |
+| `journal` | Morning Brief or Evening Entry record (compatibility type) | `5. Resources/{Area}/Journal/` |
 | `area-dashboard` | Per-area dashboard hub | `3. Areas/{Area}/` or `Personal/` |
 
 **Frontmatter shapes — read the template.** Field shapes per `type` are defined by the templates in `system-settings/Templates/`, not restated here — re-typing field lists is how they drift. When creating a note, read the matching template. Every template carries `date` + the routing properties; `status`, `tags`, and type-specific fields vary by template.
@@ -168,7 +168,7 @@ If you mirror projects across other systems (GitHub, Linear, Azure DevOps, Notio
 
 ## Privacy Inheritance (only if you have or expect private projects — otherwise omit)
 
-Privacy is a **project-level** property. When a project hub (`type: project`) has `private: true`, every file with `project: <same-slug>` inherits it — all devlogs, knowledge notes, tasks, and the hub itself. Privatized files are excluded from any "recent activity" rollup, daily recap, or journal-priority extraction. Override on a single file with `private: false`.
+Privacy is a **project-level** property. When a project hub (`type: project`) has `private: true`, every file with `project: <same-slug>` inherits it — all devlogs, knowledge notes, tasks, and the hub itself. Privatized files are excluded from any "recent activity" rollup, daily recap, or Morning Brief priority extraction. Override on a single file with `private: false`.
 
 ## Orphan-Note Rule
 

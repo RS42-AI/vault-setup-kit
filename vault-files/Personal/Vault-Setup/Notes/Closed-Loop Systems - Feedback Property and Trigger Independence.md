@@ -63,7 +63,7 @@ Wiring a cron to an open-loop process doesn't produce a closed-loop system. It p
 | System | Closed-loop? | Autonomous? | Scheduled? |
 |---|---|---|---|
 | Thermostat | ✅ (reads temp, acts, reads new temp) | ✅ | continuous |
-| Daily journaling system that reads yesterday's state before writing today's prompts | ✅ | ✅ | ✅ (cron-driven) |
+| Daily briefing system that reads yesterday's state before preparing today's context | ✅ | ✅ | ✅ (schedule-driven) |
 | While-loop agent (`while not done: do_next()`) | ✅ | ✅ | ❌ (loops as fast as possible) |
 | Ingestion workflow with a broken dedup query that silently caps at 100 records | ❌ — *tried* to read state but the query was wrong, so it acted on bad observations. Effectively open-loop despite intent. | ✅ (cron-driven) | ✅ |
 | One-off `bash deploy.sh` | ❌ | ❌ | ❌ |

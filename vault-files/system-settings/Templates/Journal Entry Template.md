@@ -4,11 +4,10 @@ type: journal
 journal_type: morning
 tags:
   - journal
-habit_journaled: false
-habit_exercise: false
+habit_morning_brief: false
 ---
 
-%% Habits are yours to define. Add or rename `habit_*` properties above — the AI skills read whatever `habit_*` fields the entry carries (the template owns the schema; no fixed set is assumed). The two above are neutral starters. %%
+%% `habit_morning_brief` is set to true by /process-morning. Add your own `habit_*` properties only if they are useful to you; no personal habit is required by the kit. The `journal` type and path remain for backward compatibility. %%
 
 # Daily Hub: [[1. Daily/<% tp.date.now("YYYY-MM-DD") %>|<% tp.date.now("YYYY-MM-DD") %>]]
 
@@ -121,6 +120,7 @@ views:
 
 ## Morning
 
+%% Optional: write or dictate anything that would help you orient, decide, or reflect. The prepared brief above remains useful even when you add nothing here. %%
 
 ### AI Summary
-*(filled by /process-journal)*
+*(filled by /process-morning when you add a morning entry)*

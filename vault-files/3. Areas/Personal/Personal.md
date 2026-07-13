@@ -9,7 +9,7 @@ tags:
 ---
 
 > [!note] Area Purpose
-> Your personal life — reflections, planning, health, journaling, life projects.
+> Your personal life — planning, health, life projects, and optional reflection.
 
 This is a dashboard. It auto-populates from frontmatter properties on every other note. As you create notes with `area: personal`, they appear in the right section below.
 

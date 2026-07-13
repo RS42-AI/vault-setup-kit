@@ -21,7 +21,7 @@ Numeric prefixes order the top-level folders in the sidebar; `Personal/` and `sy
 | `4. Contacts/People/` | Contact notes | `person` |
 | `4. Contacts/Meetings/` | Meeting notes | `meeting` |
 | `5. Resources/` | Human-curated reference material by area | `resource` |
-| `5. Resources/Personal/` | Personal reference material; holds the `Journal/` subtree (`Morning Entries/`, `Evening Entries/`) | `resource`, `journal` |
+| `5. Resources/Personal/` | Personal reference material; holds the compatibility `Journal/` subtree for Morning Briefs and Evening Entries | `resource`, `journal` |
 | `6. Main Notes/` | General knowledge, not project-specific | `note`/`idea`/`goal`/`thought` |
 | `Personal/` | Self-contained `personal` area at the vault root, holds personal-life projects | `area-dashboard` |
 | `Personal/Tasks/` | Area-level personal tasks not tied to a project | `task` |
@@ -53,15 +53,15 @@ Projects use a standard four-folder layout:
 
 One file per goal: `3. Areas/{Area}/Goals/{Goal Name}.md` (`type: goal`). Each goal is its own sub-hub — an Objective plus Key Results — rather than a single horizon-aggregate file per quarter. The kit pre-creates `3. Areas/Personal/Goals/`; create the parallel `Goals/` folder for any new area you add.
 
-## Journal & Daily Paths
+## Morning Brief, Evening Entry & Daily Paths
 
-Journal paths follow `5. Resources/{Area}/Journal/`. The kit ships with one area (`personal`), so the concrete paths are:
+The `journal` type and `Journal/` folder names remain stable for backward compatibility. User-facing workflows call these records Morning Briefs and Evening Entries. The kit ships with one area (`personal`), so the concrete paths are:
 
 | Content | Path |
 |---------|------|
 | Daily note hub | `1. Daily/YYYY-MM-DD.md` |
-| Morning journal entry | `5. Resources/Personal/Journal/Morning Entries/YYYY-MM-DD.md` |
-| Evening journal entry | `5. Resources/Personal/Journal/Evening Entries/YYYY-MM-DD.md` |
+| Morning Brief | `5. Resources/Personal/Journal/Morning Entries/YYYY-MM-DD.md` |
+| Evening Entry | `5. Resources/Personal/Journal/Evening Entries/YYYY-MM-DD.md` |
 
 ## Knowledge Notes vs Devlogs
 

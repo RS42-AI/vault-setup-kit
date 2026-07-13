@@ -3,7 +3,7 @@
 #
 # Registers the AI-OS Lite marketplace and installs + enables the plugin, so
 # the daily workflow commands are available in Claude Code:
-#   /start-day  /process-journal  /prep-evening  /process-evening
+#   /start-day  /process-morning  /prep-evening  /process-evening
 #   /vault-commit  /project-sync
 #
 # The kit ORCHESTRATES the install from the ai-os-lite repo — it does not
@@ -62,5 +62,5 @@ echo ""
 echo "=== AI-OS Lite Installed ==="
 echo ""
 echo "Verify in Claude Code by running:  /start-day"
-echo "Other commands now available: /process-journal /prep-evening"
+echo "Other commands now available: /process-morning /prep-evening"
 echo "  /process-evening /vault-commit /project-sync"

@@ -4,7 +4,8 @@ Bootstrap kit that takes a fresh macOS or Windows (via WSL2) device to a working
 
 ## What it ships
 
-- A working Obsidian vault with hub-and-spoke folder structure, frontmatter routing, and 12 templates
+- A working Obsidian vault with hub-and-spoke folder structure, frontmatter routing, and 14 templates
+- A scheduled executive Morning Brief plus an optional, neutral Evening Entry—useful without requiring journaling or personal habit disclosure
 - A starter `Personal/Vault-Setup/` project with a 9-note curriculum on AI-native architecture, multi-agent systems, and the human-AI collaboration model behind the vault
 - A generic `CLAUDE.md` that teaches AI assistants the conventions of this vault
 - Bash scripts to install Obsidian community plugins (Templater, Dataview, Local REST API, MCP Tools, etc.)
@@ -41,17 +42,20 @@ By default, the vault lives at `~/Claude/ObsidianVault`. Pass a different path a
 bash setup.sh ~/Documents/MyVault
 ```
 
-The kit runs three steps in order:
+The kit runs four steps in order:
 
 1. **setup-vault.sh** — creates the folder structure and copies starter content
 2. **setup-plugins.sh** — downloads and configures Obsidian community plugins
 3. **setup-mcp.sh** — registers MCP servers with Claude Code
+4. **setup-claude-plugins.sh** — installs the AI-OS Lite daily workflow skills
 
 You can also run any step individually if you only need to refresh part of the setup. All scripts are **idempotent** — re-running won't overwrite existing files.
 
-### Editions
+### Generalized default
 
-The kit builds one of two editions of the same work core. **personal** (default) — the full life+work OS: the core plus personal-life areas, journaling, goals, and the starter curriculum. **team** — the RS42 work vault: the core plus an RS42 area, work-log daily notes, and team onboarding:
+The supported default is the full, generalized system: work and life projects, goals, Morning Briefs, optional Evening Entries, and the starter curriculum. Reflection remains available, but the kit does not prescribe gratitude, journaling, or any personal habit. This is the edition intended for interns and other collaborators.
+
+A legacy `team` edition remains available for compatibility with earlier installs, but it is not the current product direction:
 
 ```bash
 bash setup.sh --edition=team ~/path/to/work-vault
@@ -59,16 +63,14 @@ bash setup.sh --edition=team ~/path/to/work-vault
 bash setup-vault.sh --edition=team ~/path/to/work-vault
 ```
 
-The team edition is how each collaborator gets their own RS42 work vault (their own private git repo), with the shared knowledge commons mounted in later as a submodule.
-
-Already ran the kit on the personal edition and want to switch? See [docs/switching-to-team-edition.md](docs/switching-to-team-edition.md).
+Existing team-edition users can still consult [docs/switching-to-team-edition.md](docs/switching-to-team-edition.md).
 
 ### Windows (via WSL2)
 
 1. Clone or download this repo on your Windows machine.
 2. Right-click `setup-windows.ps1` and choose **Run as administrator** (or run `.\setup-windows.ps1` from an elevated PowerShell).
 3. The script installs WSL2 + Ubuntu and then **prompts you to restart your PC**. After restarting, run `setup-windows.ps1` again — it detects WSL is already installed and picks up where it left off.
-4. On the second run the script installs Node, Claude Code, and bun inside WSL, then builds the vault and installs the Obsidian plugins (headless). It then **pauses in the PowerShell console** and asks you to open Obsidian, enable the plugins, and paste the Local REST API key. After you paste the key, it finishes the MCP servers and the Personal OS plugin.
+4. On the second run the script installs Node, Claude Code, and bun inside WSL, then builds the vault and installs the Obsidian plugins (headless). It then **pauses in the PowerShell console** and asks you to open Obsidian, enable the plugins, and paste the Local REST API key. After you paste the key, it finishes the MCP servers and the AI-OS Lite plugin.
 
 There is one unavoidable interactive step — opening Obsidian and pasting the REST API key — exactly as on macOS. Press Enter at the prompt to skip MCP for now; you can register it later inside WSL with `OBSIDIAN_API_KEY=<your-key> bash ~/vault-setup-kit/setup-mcp.sh`.
 
@@ -82,9 +84,9 @@ In Obsidian, choose "Open folder as vault" and navigate to:
 
 Replace `<your-username>` with your WSL Ubuntu username (the script prints the exact path when it finishes).
 
-**Running Claude Code and Personal OS commands**
+**Running Claude Code and AI-OS commands**
 
-Claude Code and the daily Personal OS commands (`/start-day`, etc.) run **inside WSL** — not in a Windows terminal. Open the Ubuntu app from the Start menu, or use the WSL terminal profile in Obsidian's Terminal plugin, to run them.
+Claude Code and the daily AI-OS commands (`/start-day`, etc.) run **inside WSL** — not in a Windows terminal. Open the Ubuntu app from the Start menu, or use the WSL terminal profile in Obsidian's Terminal plugin, to run them.
 
 ## Updating an existing install
 
@@ -102,7 +104,7 @@ Then open Claude Code in the vault and run `/update-structure` — it walks you 
 1. Open Obsidian, point it at the vault path
 2. Open `Personal/Vault-Setup/Vault-Setup.md`
 3. Read the curriculum, do the 3 onboarding tasks
-4. Customize `CLAUDE.md` for your specific areas and projects
+4. Customize `AGENTS.md` for your specific areas and projects (`CLAUDE.md` points to it)
 
 ## Status
 

@@ -5,7 +5,7 @@
 #   1. setup-vault.sh          — create folder structure and copy starter content
 #   2. setup-plugins.sh        — install Obsidian community plugins
 #   3. setup-mcp.sh            — register MCP servers with Claude Code
-#   4. setup-claude-plugins.sh — install the Personal OS Claude Code plugin
+#   4. setup-claude-plugins.sh — install the AI-OS Lite Claude Code plugin
 #
 # Usage: bash setup.sh [vault_path]
 #   vault_path defaults to ~/Claude/ObsidianVault
@@ -60,8 +60,8 @@ bash "$SCRIPT_DIR/setup-mcp.sh" "$VAULT"
 echo ""
 
 echo "------------------------------------------------------------"
-echo "  Installing the Personal OS Claude Code plugin"
-echo "  (daily commands: /start-day, /process-journal, /vault-commit, ...)"
+echo "  Installing the AI-OS Lite Claude Code plugin"
+echo "  (daily commands: /start-day, /process-morning, /vault-commit, ...)"
 echo "------------------------------------------------------------"
 echo ""
 

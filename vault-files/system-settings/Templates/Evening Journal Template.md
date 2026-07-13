@@ -4,29 +4,30 @@ type: journal
 journal_type: evening
 tags:
   - journal
-habit_journaled: false
+habit_evening_reflection: false
 ---
 
-## Evening Habits
-- [ ] Journaled
+%% `habit_evening_reflection` is set to true by /process-evening when you add an evening entry. Add your own `habit_*` properties only if they are useful to you; no personal habit is required by the kit. The `journal` type and path remain for backward compatibility. %%
 
-%% Add your own evening habits: one checkbox line here plus a matching `habit_*` property in the frontmatter above. The skills parse every checkbox in this section — no fixed set is assumed. %%
+### Today's Accomplishments
+*(filled by /prep-evening)*
 
-## Context
-*(filled by /prep-evening — today's accomplishments, highlights, suggestions)*
+### Tomorrow Preview
+*(filled by /prep-evening)*
+
+### Wind Down
+*(filled by /prep-evening)*
+
+---
 
 ## Evening
 
+%% Optional: write or dictate anything you want to preserve from the day. There are no required prompts, gratitude lists, or habit checklists. %%
 
-## Reflection
+### AI Summary
+*(filled by /process-evening when you add an evening entry)*
 
-**What went well today:**
+---
 
-
-**What could I improve:**
-
-
-**Grateful for:**
-1.
-2.
-3.
+###### Still Open
+*(filled by /prep-evening)*
