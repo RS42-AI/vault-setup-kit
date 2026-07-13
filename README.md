@@ -7,7 +7,7 @@ Bootstrap kit that takes a fresh macOS or Windows (via WSL2) device to a working
 - A working Obsidian vault with hub-and-spoke folder structure, frontmatter routing, and 14 templates
 - An executive Morning Brief plus an optional, neutral Evening Entry—manual by default and safe to invoke from an external scheduler
 - A starter `Personal/Vault-Setup/` project with a 9-note curriculum on AI-native architecture, multi-agent systems, and the human-AI collaboration model behind the vault
-- A generic `CLAUDE.md` that teaches AI assistants the conventions of this vault
+- A generic `AGENTS.md` operating contract, with `CLAUDE.md` importing it for Claude Code
 - Bash scripts to install Obsidian community plugins (Templater, Dataview, Local REST API, MCP Tools, etc.)
 - Bash scripts to register MCP servers (obsidian-mcp-tools, QMD) with Claude Code
 
@@ -31,7 +31,7 @@ Bootstrap kit that takes a fresh macOS or Windows (via WSL2) device to a working
 ### macOS
 
 ```bash
-git clone git@github.com:RS42-AI/vault-setup-kit.git
+git clone https://github.com/RS42-AI/vault-setup-kit.git
 cd vault-setup-kit
 bash setup.sh
 ```
@@ -110,7 +110,7 @@ Then open Claude Code in the vault and run `/update-structure` — it walks you 
 
 ## Status
 
-Pre-v0.1 — under active development.
+Pilot-ready and under active development. The current public `main` is the supported intern-onboarding path.
 
 ## License
 
