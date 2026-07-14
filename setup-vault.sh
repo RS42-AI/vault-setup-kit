@@ -208,14 +208,14 @@ echo "=== Setup Complete ==="
 echo ""
 if [ "$UPDATE_MODE" -eq 1 ]; then
   echo "Next steps:"
-  echo "  1. Open Claude Code in: $VAULT"
-  echo "  2. Run: /update-structure"
+  echo "  1. Open Claude Code or Codex in: $VAULT"
+  echo "  2. In Claude Code, run: /update-structure"
   echo "     (applies outstanding structure updates interactively)"
 else
   echo "Next steps:"
   echo "  1. Open Obsidian and point it at: $VAULT"
   echo "  2. Run setup-plugins.sh to install community plugins"
-  echo "  3. Run setup-mcp.sh to register MCP servers with Claude Code"
+  echo "  3. Run setup.sh --agent=claude|codex|both for agent integration"
   if [ "$EDITION" = "team" ]; then
     echo "  4. Open '2. Projects/RS42/RS42-Onboarding/RS42-Onboarding.md' and start there"
   else

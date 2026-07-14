@@ -106,3 +106,12 @@ load test_helper
   run python3 -m json.tool "$dir/data.json"
   [ "$status" -eq 0 ]
 }
+
+@test "setup-windows supports Claude, Codex, or both inside WSL" {
+  run grep -q 'ValidateSet("claude", "codex", "both")' "$KIT_ROOT/setup-windows.ps1"
+  [ "$status" -eq 0 ]
+  run grep -q '@openai/codex' "$KIT_ROOT/setup-windows.ps1"
+  [ "$status" -eq 0 ]
+  run grep -q 'setup-codex-plugins.sh' "$KIT_ROOT/setup-windows.ps1"
+  [ "$status" -eq 0 ]
+}

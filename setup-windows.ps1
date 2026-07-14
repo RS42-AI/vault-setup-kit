@@ -3,14 +3,20 @@
   setup-windows.ps1 — One-file Windows entry point for the vault-setup-kit.
   Enables WSL2 + Ubuntu, installs prerequisites inside WSL, then drives the kit's
   sub-scripts directly: vault + plugins run headless, then PowerShell pauses (real
-  console TTY) to collect the Local REST API key and finishes MCP + Personal OS.
+  console TTY) to collect any required Local REST API key and finishes the
+  selected Claude/Codex AI-OS Lite setup.
   The user never types a Linux command.
 
-  Usage (from an elevated PowerShell):  .\setup-windows.ps1
+  Usage (from an elevated PowerShell):
+    .\setup-windows.ps1
+    .\setup-windows.ps1 -Agent codex
+    .\setup-windows.ps1 -Agent both
 #>
 param(
   [string]$Distro = "Ubuntu",
-  [string]$KitRepo = "https://github.com/RS42-AI/vault-setup-kit.git"
+  [string]$KitRepo = "https://github.com/RS42-AI/vault-setup-kit.git",
+  [ValidateSet("claude", "codex", "both")]
+  [string]$Agent = "claude"
 )
 $ErrorActionPreference = "Stop"
 
@@ -61,8 +67,15 @@ if ($LASTEXITCODE -ne 0) { throw "WSL apt-get failed (exit $LASTEXITCODE). See e
 wsl.exe -d $Distro -- bash -lc 'command -v node >/dev/null 2>&1 || { curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash - && sudo apt-get install -y nodejs; }'
 if ($LASTEXITCODE -ne 0) { throw "WSL Node.js install failed (exit $LASTEXITCODE). See errors above." }
 
-wsl.exe -d $Distro -- bash -lc 'command -v claude >/dev/null 2>&1 || sudo npm install -g @anthropic-ai/claude-code'
-if ($LASTEXITCODE -ne 0) { throw "WSL Claude Code install failed (exit $LASTEXITCODE). See errors above." }
+if ($Agent -in @("claude", "both")) {
+  wsl.exe -d $Distro -- bash -lc 'command -v claude >/dev/null 2>&1 || sudo npm install -g @anthropic-ai/claude-code'
+  if ($LASTEXITCODE -ne 0) { throw "WSL Claude Code install failed (exit $LASTEXITCODE). See errors above." }
+}
+
+if ($Agent -in @("codex", "both")) {
+  wsl.exe -d $Distro -- bash -lc 'command -v codex >/dev/null 2>&1 || sudo npm install -g @openai/codex'
+  if ($LASTEXITCODE -ne 0) { throw "WSL Codex install failed (exit $LASTEXITCODE). See errors above." }
+}
 
 wsl.exe -d $Distro -- bash -lc 'command -v bun >/dev/null 2>&1 || { curl -fsSL https://bun.sh/install | bash; }'
 if ($LASTEXITCODE -ne 0) { throw "WSL bun install failed (exit $LASTEXITCODE). See errors above." }
@@ -92,26 +105,52 @@ if ($LASTEXITCODE -ne 0) { throw "WSL vault setup failed (exit $LASTEXITCODE). S
 wsl.exe -d $Distro -- bash -lc "cd ~/vault-setup-kit && SETUP_YES=1 bash setup-plugins.sh '$wslVaultPath'"
 if ($LASTEXITCODE -ne 0) { throw "WSL plugins setup failed (exit $LASTEXITCODE). See errors above." }
 
-# 4.4 — PowerShell pause (real console): open Obsidian, enable plugins, grab the key.
+# 4.4 — PowerShell pause (real console): open Obsidian and enable plugins.
 Write-Host "`n------------------------------------------------------------" -ForegroundColor Cyan
-Write-Host "Obsidian handshake needed before MCP can register:" -ForegroundColor Cyan
+Write-Host "Obsidian setup:" -ForegroundColor Cyan
 Write-Host "  1. Open Obsidian (Windows) -> 'Open folder as vault' at:"
 Write-Host "       $winVaultPath" -ForegroundColor Yellow
 Write-Host "  2. Enable these community plugins: Local REST API, MCP Tools, Templater, Dataview."
-Write-Host "  3. Copy the key from Settings -> Local REST API -> API Key."
+if ($Agent -in @("claude", "both")) {
+  Write-Host "  3. Copy the key from Settings -> Local REST API -> API Key."
+} else {
+  Write-Host "  3. Return here after the plugins are enabled."
+}
 Write-Host "------------------------------------------------------------" -ForegroundColor Cyan
-$apiKey = Read-Host "Paste the Local REST API key (or press Enter to skip MCP for now)"
+if ($Agent -in @("claude", "both")) {
+  $apiKey = Read-Host "Paste the Local REST API key (or press Enter to skip MCP for now)"
+} else {
+  Read-Host "Press Enter to continue with Codex plugin setup" | Out-Null
+  $apiKey = ""
+}
 
-# 4.5 — run MCP + Personal OS plugin in WSL, passing the key via env.
+# 4.5 — run the selected MCP/plugin setup in WSL, passing the key via env.
 # Escape single quotes for the single-quoted bash string ('->'\'') so an unexpected
 # character in the key can't break or inject into the command. $apiKey/$Distro are
 # PowerShell vars and expand here.
 $apiKeyEsc = $apiKey.Replace("'", "'\''")
-wsl.exe -d $Distro -- bash -lc "cd ~/vault-setup-kit && OBSIDIAN_API_KEY='$apiKeyEsc' bash setup-mcp.sh && bash setup-claude-plugins.sh"
-if ($LASTEXITCODE -ne 0) { throw "WSL MCP/plugin setup failed (exit $LASTEXITCODE). See errors above." }
+switch ($Agent) {
+  "claude" {
+    $agentSetup = "OBSIDIAN_API_KEY='$apiKeyEsc' bash setup-mcp.sh '$wslVaultPath' && bash setup-claude-plugins.sh '$wslVaultPath'"
+  }
+  "codex" {
+    $agentSetup = "bash setup-codex-plugins.sh '$wslVaultPath'"
+  }
+  "both" {
+    $agentSetup = "OBSIDIAN_API_KEY='$apiKeyEsc' bash setup-mcp.sh '$wslVaultPath' && bash setup-claude-plugins.sh '$wslVaultPath' && bash setup-codex-plugins.sh '$wslVaultPath'"
+  }
+}
+wsl.exe -d $Distro -- bash -lc "cd ~/vault-setup-kit && $agentSetup"
+if ($LASTEXITCODE -ne 0) { throw "WSL $Agent plugin setup failed (exit $LASTEXITCODE). See errors above." }
 
 # Phase 5 — done; remind the user how to open the vault and run the daily commands.
 Write-Host "`n=== Done ===" -ForegroundColor Green
 Write-Host "Open Obsidian (Windows) and 'Open folder as vault' at:"
 Write-Host "  $winVaultPath" -ForegroundColor Cyan
-Write-Host "Claude Code + Personal OS commands run inside WSL: open the Ubuntu app and run /start-day." -ForegroundColor Cyan
+if ($Agent -eq "claude") {
+  Write-Host "Claude Code + AI-OS Lite run inside WSL: open Ubuntu and run /start-day." -ForegroundColor Cyan
+} elseif ($Agent -eq "codex") {
+  Write-Host "Codex + AI-OS Lite run inside WSL: open Ubuntu, start Codex in the vault, and ask it to run `$start-day." -ForegroundColor Cyan
+} else {
+  Write-Host "Claude Code and Codex + AI-OS Lite run inside WSL. Start either agent in the vault." -ForegroundColor Cyan
+}
