@@ -127,7 +127,10 @@ EOF
 }
 
 # Allow tests to source just the function definitions (skip the procedural body).
-[ "${KIT_SOURCE_ONLY:-0}" = "1" ] && return 0 2>/dev/null || true
+if [ "${KIT_SOURCE_ONLY:-0}" = "1" ]; then
+  # shellcheck disable=SC2317 # Fallback is reachable only when the file is executed, not sourced.
+  return 0 2>/dev/null || exit 0
+fi
 
 echo "=== Obsidian Plugin Setup ==="
 echo "Vault: $VAULT"
