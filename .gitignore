@@ -5,3 +5,5 @@
 .test-output/
 config.env
 *.log
+# Dev-process docs stay untracked in public repos (see vault AGENTS.md public-repo rule)
+docs/superpowers/

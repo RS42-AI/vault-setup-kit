@@ -63,14 +63,19 @@ Creating a note is a **four-step procedure**, not a one-step "write the file." T
 
 1. **Search the vault first.** Before writing, search for notes on the same or adjacent topics — keyword search for exact terms and file names, semantic/vector search when the wording may differ (see [Vault Search Strategy](#vault-search-strategy)). You are looking for two things: (a) an existing canonical note you'd be duplicating, and (b) the hub note(s) and related notes this new note should connect to. **Search the commons too** — the team may already have a note on it.
 2. **Route it.** Use the File Routing decision tree above to choose the folder and set `type` / `area` / `project`.
-3. **Wikilink into the graph.** Add `[[wikilinks]]` to the related notes and hub(s) you found in step 1 (including commons notes under `5. Resources/RS42-Commons/`). If the note is a child of a hub, add a `> **Parent**: [[Hub Note]]` backlink near the top. **A new note with zero outgoing links is a smell.**
+3. **Wikilink into the graph.** Add `[[wikilinks]]` to the related notes and hub(s) you found in step 1 (including commons notes under `5. Resources/RS42-Commons/`). If the note is a child of a hub, add a `> **Parent**: [[Hub Note]]` backlink near the top. **A new note with zero outgoing links is a smell.** Where a link can be stated as a sentence `A —verb→ B` using the [Relationship verbs](#relationship-verbs--closed-list-the-ontology-t-box) table, also record it as a typed frontmatter property.
 4. **Verify uniqueness.** Confirm you're not duplicating an existing canonical note (Note Quality Rules 3 and 10). If one exists, extend or link it instead of creating a parallel one.
 
 ## Frontmatter Taxonomy
 
 Three properties route every note: **`type`** (what kind), **`area`** (`rs42`), **`project`** (which project — optional; derived from the filesystem, never enumerated).
 
-### `type` values
+### `type` values — CLOSED LIST
+
+These are the **only** allowed `type:` values. If a note does not obviously fit
+one of these, it is `note` — never invent a new type. Do **not** create `guide`,
+`architecture`, `workflow`, `combined`, or anything else; a note's *character*
+belongs in `tags:`, not in `type:`.
 
 | Value | Description | Where it lives |
 |-------|------------|----------------|
@@ -89,6 +94,47 @@ Three properties route every note: **`type`** (what kind), **`area`** (`rs42`), 
 | `area-dashboard` | Area dashboard hub | `3. Areas/RS42/` |
 
 **Frontmatter shapes — read the template.** Field shapes per `type` are defined by the templates in `system-settings/Templates/`, not restated here. When creating a note, read the matching template.
+
+### `status` values — CLOSED LIST (per type)
+
+`status` is a closed enum **scoped by `type`** — pick only from the row for the
+note's type. Any value not in the row is forbidden; map it to the nearest
+allowed one (never write `in-progress`, `complete`, `planned`, `shipped`,
+`backlog`, `pending`…).
+
+| `type` | allowed `status` (progression →) | pause / terminal |
+|--------|-----------------------------------|------------------|
+| `task` | `todo` → `active` → `done` | `on-hold`, `archived` |
+| `spec`, `project` | `draft` → `in-review` → `active` → `done` | `on-hold`, `superseded`, `archived` |
+| `goal` | `active` → `done` (achieved) *or* `passed` (horizon expired, not fully achieved) | `archived` |
+| `area-dashboard` | `active` → `done` | `archived` |
+| `note`, `idea`, `thought` | `capture` → `done` | `superseded` |
+| `devlog`, `meeting` | `capture` | — |
+| `daily`, `person`, `resource` | *(no `status` field)* | — |
+
+**🔒 `done` is human-only.** An AI agent may write any status *except* `done`
+(and `passed`, for goals) — marking something finished is a human decision.
+
+**`note` → `resource` on completion.** A `note` that reaches `done` is a curated
+keeper — promote it to `type: resource` in `5. Resources/RS42/`. A `resource`
+carries no lifecycle `status`. (This promotion, like any `done`, is human-only.)
+
+### Relationship verbs — CLOSED LIST (the ontology T-box)
+
+Typed relationships between notes are a **closed enum**, same species as `type`/`status`. A typed link is an assertion — it must be sayable as a sentence `A —verb→ B`; **no sentence, no link**. Plain prose wikilinks remain allowed as untyped ambience, but agents may only *rely* on typed edges. Storage: **frontmatter list properties on the subject note**, values are wikilinks — never inline body fields (Bases reads properties).
+
+| Verb | Meaning (A —verb→ B) | Written as |
+|---|---|---|
+| `blocks` / `unlocks` | B waits on A / completing A enables B | `blocked_by:` (on the blocked note) / `unlocks:` |
+| `serves_goal` | work advances goal G | `goal:` / `quarter_goal:` (plus `kr` — a plain label, not a link field) |
+| `supersedes` | A replaces B as canonical | `status: superseded` + callout on B |
+| `evidences` | A is proof-of-work for B | devlog `tasks:` |
+| `part_of` | containment | `project:` / `area:` (+ folder placement) — **never a separate field** |
+| `uses_system` | process/project runs on this tool/system | `uses_system:` |
+| `informs` | knowledge input to a decision (weaker than `evidences`) | `informs:` |
+| `owned_by` | accountability rests with this person | `owned_by:` |
+
+**🔒 Propose, don't invent.** AI must never write a verb outside this table. A candidate verb is *proposed* to the human with one example sentence, and the rule of three applies: formalize a verb only on its third real occurrence. Proposals accumulate in `6. Main Notes/Ontology Proposal Ledger.md` (created on first use) so counting occurrences is a grep. In a team vault, propose new verbs **to the founder** rather than ratifying locally — the ontology vocabulary stays consistent across the team, so a ratified verb lands as a kit update, not a local edit.
 
 ## Devlog Task Linking
 

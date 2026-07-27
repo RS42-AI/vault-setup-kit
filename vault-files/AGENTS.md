@@ -67,7 +67,7 @@ Creating a note is a **four-step procedure**, not a one-step "write the file." T
 
 1. **Search the vault first.** Before writing, search for notes on the same or adjacent topics — keyword search for exact terms and file names, semantic/vector search when the wording may differ (see [Vault Search Strategy](#vault-search-strategy)). You are looking for two things: (a) an existing canonical note you'd be duplicating, and (b) the hub note(s) and related notes this new note should connect to.
 2. **Route it.** Use the File Routing decision tree above to choose the folder and set `type` / `area` / `project`.
-3. **Wikilink into the graph.** Add `[[wikilinks]]` to the related notes and hub(s) you found in step 1. If the note is a child of a hub, add a `> **Parent**: [[Hub Note]]` backlink near the top. **A new note with zero outgoing links is a smell** — it means you skipped the search, or this is genuinely the first note on a brand-new topic (rare in an established vault). Do not finalize a zero-link note without consciously confirming it's the latter.
+3. **Wikilink into the graph.** Add `[[wikilinks]]` to the related notes and hub(s) you found in step 1. If the note is a child of a hub, add a `> **Parent**: [[Hub Note]]` backlink near the top. Where a link can be stated as a sentence `A —verb→ B` using the [Relationship verbs](#relationship-verbs--closed-list-the-ontology-t-box) table, also record it as a typed frontmatter property. **A new note with zero outgoing links is a smell** — it means you skipped the search, or this is genuinely the first note on a brand-new topic (rare in an established vault). Do not finalize a zero-link note without consciously confirming it's the latter.
 4. **Verify uniqueness.** Confirm you're not duplicating an existing canonical note (Note Quality Rules 3 and 10). If a canonical note already exists, extend or link it instead of creating a parallel one.
 
 This procedure applies to **every** note you create — both slash-command outputs and ad-hoc "take a note about this" moments. The vault grows correctly only if the graph is woven on the way in.
@@ -144,6 +144,23 @@ unscored:
 
 Allowed `goal_status` values are `scored`, `discovery`, and `unscored`. An
 active project with empty `goal:` and no `goal_status:` is drift.
+
+### Relationship verbs — CLOSED LIST (the ontology T-box)
+
+Typed relationships between notes are a **closed enum**, same species as `type`/`status`. A typed link is an assertion — it must be sayable as a sentence `A —verb→ B`; **no sentence, no link**. Plain prose wikilinks remain allowed as untyped ambience, but agents may only *rely* on typed edges. Storage: **frontmatter list properties on the subject note**, values are wikilinks — never inline body fields (Bases reads properties).
+
+| Verb | Meaning (A —verb→ B) | Written as |
+|---|---|---|
+| `blocks` / `unlocks` | B waits on A / completing A enables B | `blocked_by:` (on the blocked note) / `unlocks:` |
+| `serves_goal` | work advances goal G | `goal:` / `quarter_goal:` (plus `kr` — a plain label, not a link field) |
+| `supersedes` | A replaces B as canonical | `status: superseded` + callout on B |
+| `evidences` | A is proof-of-work for B | devlog `tasks:` |
+| `part_of` | containment | `project:` / `area:` (+ folder placement) — **never a separate field** |
+| `uses_system` | process/project runs on this tool/system | `uses_system:` |
+| `informs` | knowledge input to a decision (weaker than `evidences`) | `informs:` |
+| `owned_by` | accountability rests with this person | `owned_by:` |
+
+**🔒 Propose, don't invent.** AI must never write a verb outside this table. A candidate verb is *proposed* to the human with one example sentence, and the rule of three applies: formalize a verb only on its third real occurrence. Proposals accumulate in `6. Main Notes/Ontology Proposal Ledger.md` (created on first use) so counting occurrences is a grep. Like the Areas table, this list is yours to grow — ratifying a new verb (adding a row here) is a human decision, same ceremony as extending the `type` enum.
 
 ## Devlog Task Linking
 
